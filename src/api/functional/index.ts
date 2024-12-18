@@ -5,3 +5,5 @@
  */
 //================================================================
 export * as monitors from "./monitors";
+export * as wanted from "./wanted";
+export * as chatting from "./chatting";
