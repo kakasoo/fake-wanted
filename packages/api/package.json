@@ -1,0 +1,28 @@
+{
+  "name": "@ORGANIZATION/PROJECT-api",
+  "version": "0.1.0",
+  "description": "API for PROJECT",
+  "main": "lib/index.js",
+  "module": "lib/index.mjs",
+  "typings": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samchon/backend"
+  },
+  "author": "AUTHOR",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/samchon/backend/issues"
+  },
+  "homepage": "https://github.com/samchon/backend#readme",
+  "dependencies": {
+    "@nestia/fetcher": "^4.4.2",
+    "typia": "^7.4.1"
+  },
+  "include": [
+    "lib",
+    "package.json",
+    "swagger.json",
+    "README.md"
+  ]
+}
