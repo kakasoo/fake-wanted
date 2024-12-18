@@ -10,7 +10,7 @@ module.exports = {
   plugins: ["@trivago/prettier-plugin-sort-imports"],
   importOrder: [
     "<THIRD_PARTY_MODULES>",
-    "^@ORGANIZATION/PROJECT-api(.*)$",
+    "^@kakasoo/fake-wanted-api(.*)$",
     "^[./]",
   ],
   importOrderSeparation: true,

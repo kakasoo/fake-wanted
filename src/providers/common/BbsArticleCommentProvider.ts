@@ -1,9 +1,8 @@
+import { IBbsArticle } from "@kakasoo/fake-wanted-api/lib/structures/common/IBbsArticle";
+import { IBbsArticleComment } from "@kakasoo/fake-wanted-api/lib/structures/common/IBbsArticleComment";
+import { IPage } from "@kakasoo/fake-wanted-api/lib/structures/common/IPage";
 import { Prisma } from "@prisma/client";
 import { v4 } from "uuid";
-
-import { IBbsArticle } from "@ORGANIZATION/PROJECT-api/lib/structures/common/IBbsArticle";
-import { IBbsArticleComment } from "@ORGANIZATION/PROJECT-api/lib/structures/common/IBbsArticleComment";
-import { IPage } from "@ORGANIZATION/PROJECT-api/lib/structures/common/IPage";
 
 import { MyGlobal } from "../../MyGlobal";
 import { PaginationUtil } from "../../utils/PaginationUtil";

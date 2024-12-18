@@ -1,6 +1,5 @@
+import { IPage } from "@kakasoo/fake-wanted-api/lib/structures/common/IPage";
 import { ArrayUtil } from "@nestia/e2e";
-
-import { IPage } from "@ORGANIZATION/PROJECT-api/lib/structures/common/IPage";
 
 export namespace PaginationUtil {
   export interface Transformer<Input extends object, Output extends object> {

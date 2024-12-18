@@ -1,20 +1,20 @@
 # SDK for Client Developers
 ## Outline
-[`@ORGANIZATION/PROJECT`](https://github.com/samchon/backend) provides SDK (Software Development Kit) for convenience.
+[`@kakasoo/PROJECT`](https://github.com/kakasoo/fake-wanted) provides SDK (Software Development Kit) for convenience.
 
-For the client developers who are connecting to this backend server, [`@ORGANIZATION/PROJECT`](https://github.com/samchon/backend) provides not API documents like the Swagger, but provides the API interaction library, one of the typical SDK (Software Development Kit) for the convenience.
+For the client developers who are connecting to this backend server, [`@kakasoo/PROJECT`](https://github.com/kakasoo/fake-wanted) provides not API documents like the Swagger, but provides the API interaction library, one of the typical SDK (Software Development Kit) for the convenience.
 
 With the SDK, client developers never need to re-define the duplicated API interfaces. Just utilize the provided interfaces and asynchronous functions defined in the SDK. It would be much convenient than any other Rest API solutions.
 
 ```bash
-npm install --save @ORGANIZATION/PROJECT-api
+npm install --save @kakasoo/fake-wanted-api
 ```
 
 
 
 
 ## Usage
-Import the `@ORGANIZATION/PROJECT-api` and enjoy the auto-completion.
+Import the `@kakasoo/fake-wanted-api` and enjoy the auto-completion.
 
 ```typescript
 import api from "@samchon/bbs-api";

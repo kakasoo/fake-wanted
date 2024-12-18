@@ -1,7 +1,6 @@
+import { IPerformance } from "@kakasoo/fake-wanted-api/lib/structures/monitors/IPerformance";
 import core from "@nestia/core";
 import { Controller } from "@nestjs/common";
-
-import { IPerformance } from "@ORGANIZATION/PROJECT-api/lib/structures/monitors/IPerformance";
 
 @Controller("monitors/performance")
 export class MonitorPerformanceController {

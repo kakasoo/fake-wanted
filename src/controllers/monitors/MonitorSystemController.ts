@@ -1,7 +1,6 @@
+import { ISystem } from "@kakasoo/fake-wanted-api/lib/structures/monitors/ISystem";
 import core from "@nestia/core";
 import { Controller } from "@nestjs/common";
-
-import { ISystem } from "@ORGANIZATION/PROJECT-api/lib/structures/monitors/ISystem";
 
 import { SystemProvider } from "../../providers/monitors/SystemProvider";
 import { DateUtil } from "../../utils/DateUtil";

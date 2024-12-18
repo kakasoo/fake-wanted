@@ -1,8 +1,7 @@
+import { ISystem } from "@kakasoo/fake-wanted-api/lib/structures/monitors/ISystem";
 import fs from "fs";
 import git from "git-last-commit";
 import { Singleton, randint } from "tstl";
-
-import { ISystem } from "@ORGANIZATION/PROJECT-api/lib/structures/monitors/ISystem";
 
 import { MyConfiguration } from "../../MyConfiguration";
 import { DateUtil } from "../../utils/DateUtil";

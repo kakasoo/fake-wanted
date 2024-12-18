@@ -1,6 +1,5 @@
+import { IDiagnosis } from "@kakasoo/fake-wanted-api/lib/structures/common/IDiagnosis";
 import { HttpException } from "@nestjs/common";
-
-import { IDiagnosis } from "@ORGANIZATION/PROJECT-api/lib/structures/common/IDiagnosis";
 
 export namespace ErrorProvider {
   const http =

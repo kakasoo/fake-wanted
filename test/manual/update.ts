@@ -1,7 +1,6 @@
+import api from "@kakasoo/fake-wanted-api";
 import { ArrayUtil } from "@nestia/e2e";
 import { sleep_for } from "tstl";
-
-import api from "@ORGANIZATION/PROJECT-api";
 
 import { MyConfiguration } from "../../src/MyConfiguration";
 import { Terminal } from "../../src/utils/Terminal";
