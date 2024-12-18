@@ -10,3 +10,8 @@ pnpm-lock.yaml
 swagger.json
 openai.json
 .npmrc
+
+packages/api/migrate.json
+packages/api/openai-keyword.json
+packages/api/openai-positional.json
+packages/api/version.json
