@@ -66,9 +66,9 @@
     window.stack = [];
 
     window.onload = async () => {
-      const chatContainer = document.getElementById('chatContainer');
-      const chatInput = document.getElementById('chatInput');
-      const sendButton = document.getElementById('sendButton');
+      const chatContainer = document.getElementById("chatContainer");
+      const chatInput = document.getElementById("chatInput");
+      const sendButton = document.getElementById("sendButton");
 
       if (!stack) {
         window.stack = [];
@@ -78,13 +78,13 @@
         on: (event) => {
           window.stack.push(event);
 
-          if (event.type === 'endResponse') {
+          if (event.speaker === "agent" && event.type === "chat") {
             const startIdx = window.stack.findIndex((el) => el.messageId === event.messageId);
             const events = window.stack.slice(startIdx);
-            const message = events.map((el) => el.token ?? "").join('');
+            const message = events.map((el) => el.token ?? "").join("");
 
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('chat-message');
+            const messageElement = document.createElement("div");
+            messageElement.classList.add("chat-message");
             messageElement.innerHTML = marked.parse(message);
 
             chatContainer.appendChild(messageElement);
@@ -95,40 +95,45 @@
 
       const { connector, driver } = await window.apis.functional.chatting.start(
         {
-          host: 'http://localhost:37001',
+          host: "http://localhost:37001",
         },
         listener
       );
 
-      sendButton.addEventListener('click', () => {
+      sendButton.addEventListener("click", () => {
         const message = chatInput.value.trim();
         if (message) {
           // Create a new message element
-          const messageElement = document.createElement('div');
-          messageElement.classList.add('chat-message');
+          const messageElement = document.createElement("div");
+          messageElement.classList.add("chat-message");
           messageElement.innerHTML = marked.parse(message);
 
           // Append the message to the chat container
           chatContainer.appendChild(messageElement);
 
           // Clear the input field
-          chatInput.value = '';
+          chatInput.value = "";
 
           // Scroll to the bottom of the chat container
           chatContainer.scrollTop = chatContainer.scrollHeight;
 
           // Send message to the driver
-          driver.send(message);
+          window.stack.push({ speaker: "user", type: "chat", token: message, messageId: crypto.randomUUID(), createdAt: new Date().toISOString() })
+          driver.send({ message, histories: window.stack });
         }
       });
 
       // Handle keyboard input for Shift+Enter and Enter
-      chatInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
+      chatInput.addEventListener("keydown", (e) => {
+        if (e.isComposing) {
+          return;
+        }
+
+        if (e.key === "Enter" && !e.shiftKey) {
           // Enter -> Send message
           e.preventDefault(); // Prevent default Enter behavior
           sendButton.click();
-        } else if (e.key === 'Enter' && e.shiftKey) {
+        } else if (e.key === "Enter" && e.shiftKey) {
           // Shift + Enter -> Allow default behavior (new line)
         }
       });
