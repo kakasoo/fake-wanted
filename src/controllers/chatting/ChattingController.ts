@@ -37,8 +37,6 @@ export class ChattingController {
     acceptor: WebSocketAcceptor<any, IChatting, IListener>,
     @WebSocketRoute.Driver() driver: Driver<IListener>,
   ): Promise<void> {
-    console.log(acceptor);
-    console.log(driver);
     await acceptor.accept(new Chatter(driver));
   }
 }

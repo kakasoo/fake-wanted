@@ -1,0 +1,22 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=100%, initial-scale=1.0">
+  <title>Document</title>
+  <script type="module" src="./libraries/index.js.umd.js"></script>
+  <script>
+    window.onload = async () => {
+
+      const { connector, driver } = await window.apis.functional.chatting.start({
+        host: 'http://localhost:37001',
+      })
+    }
+  </script>
+</head>
+
+<body>
+  hi
+</body>
+
+</html>
