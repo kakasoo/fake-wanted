@@ -43,6 +43,8 @@ export class Chatter implements IChattingDriver {
             "[Caution] From here down is the schema.",
             `${this.getSchemaInfo()}`,
             "[Caution] From here, the top is the schema.",
+            "",
+            "All chats with users are talked through the markdown viewer, so you always have to say markdown.",
           ].join("\n"),
         },
         {

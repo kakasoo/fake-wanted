@@ -58,7 +58,8 @@
       background-color: #0056b3;
     }
   </style>
-  <script type="module" src="./libraries/index.js.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- for markdown viewer in chat message -->
+  <script type="module" src="./libraries/index.js.umd.js"></script> <!-- websocket and sdk apis -->
   <script>
     window.stack = [];
     window.onload = async () => {
@@ -81,7 +82,7 @@
 
             const messageElement = document.createElement('div');
             messageElement.classList.add('chat-message');
-            messageElement.textContent = message;
+            messageElement.innerHTML = marked.parse(message);
 
             // Append the message to the chat container
             chatContainer.appendChild(messageElement);
@@ -100,7 +101,7 @@
           // Create a new message element
           const messageElement = document.createElement('div');
           messageElement.classList.add('chat-message');
-          messageElement.textContent = message;
+          messageElement.innerHTML = marked.parse(message);
 
           // Append the message to the chat container
           chatContainer.appendChild(messageElement);
