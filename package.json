@@ -94,6 +94,7 @@
     "dotenv-expand": "^10.0.0",
     "git-last-commit": "^1.0.0",
     "jsonwebtoken": "^9.0.2",
+    "openai": "^4.77.0",
     "prisma": "^6.0.1",
     "serialize-error": "^4.1.0",
     "source-map-support": "^0.5.19",
