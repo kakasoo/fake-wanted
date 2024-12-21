@@ -60,20 +60,39 @@
   </style>
   <script type="module" src="./libraries/index.js.umd.js"></script>
   <script>
+    window.stack = [];
     window.onload = async () => {
+      const chatContainer = document.getElementById('chatContainer');
+      const chatInput = document.getElementById('chatInput');
+      const sendButton = document.getElementById('sendButton');
+
+      if (!stack) {
+        window.stack = [];
+      }
 
       const listener = {
-        on: (event) => stack.push(event),
+        on: (event) => {
+          window.stack.push(event);
+
+          if (event.type === 'endResponse') {
+            const startIdx = window.stack.findIndex((el) => el.messageId === event.messageId);
+            const events = window.stack.slice(startIdx);
+            const message = events.map((el) => el.token ?? "").join('');
+
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chat-message');
+            messageElement.textContent = message;
+
+            // Append the message to the chat container
+            chatContainer.appendChild(messageElement);
+
+          }
+        },
       };
 
       const { connector, driver } = await window.apis.functional.chatting.start({
         host: 'http://localhost:37001',
       }, listener)
-
-
-      const chatContainer = document.getElementById('chatContainer');
-      const chatInput = document.getElementById('chatInput');
-      const sendButton = document.getElementById('sendButton');
 
       sendButton.addEventListener('click', (event) => {
         const message = chatInput.value.trim();
@@ -91,6 +110,8 @@
 
           // Scroll to the bottom of the chat container
           chatContainer.scrollTop = chatContainer.scrollHeight;
+
+          driver.send(message);
         }
       })
 

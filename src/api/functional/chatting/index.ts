@@ -9,7 +9,7 @@ import { WebSocketConnector } from "tgrid";
 import type { Driver } from "tgrid";
 
 import type {
-  IChatting,
+  IChattingDriver,
   IListener,
 } from "../../../controllers/chatting/ChattingController";
 
@@ -47,7 +47,7 @@ export namespace start {
   };
   export type Header = any;
   export type Provider = IListener;
-  export type Listener = IChatting;
+  export type Listener = IChattingDriver;
 
   export const path = () => "/chatting/start";
 }

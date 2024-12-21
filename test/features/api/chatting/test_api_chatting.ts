@@ -14,7 +14,7 @@ export const test_api_calculate_start = async (
     listener,
   );
 
-  await driver.send();
+  await driver.send("hi");
 
   try {
   } catch (exp) {
