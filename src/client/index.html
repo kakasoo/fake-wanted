@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=100%, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simple Chat</title>
   <style>
     body {
@@ -33,20 +34,21 @@
 
     .chat-input {
       display: flex;
+      gap: 5px;
     }
 
-    input {
+    textarea {
       flex: 1;
       padding: 10px;
       font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      resize: none;
     }
 
     button {
       padding: 10px 20px;
       font-size: 16px;
-      margin-left: 5px;
       background-color: #007BFF;
       color: white;
       border: none;
@@ -58,10 +60,11 @@
       background-color: #0056b3;
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- for markdown viewer in chat message -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- for markdown viewer -->
   <script type="module" src="./libraries/index.js.umd.js"></script> <!-- websocket and sdk apis -->
   <script>
     window.stack = [];
+
     window.onload = async () => {
       const chatContainer = document.getElementById('chatContainer');
       const chatInput = document.getElementById('chatInput');
@@ -84,18 +87,20 @@
             messageElement.classList.add('chat-message');
             messageElement.innerHTML = marked.parse(message);
 
-            // Append the message to the chat container
             chatContainer.appendChild(messageElement);
-
+            chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to the bottom
           }
         },
       };
 
-      const { connector, driver } = await window.apis.functional.chatting.start({
-        host: 'http://localhost:37001',
-      }, listener)
+      const { connector, driver } = await window.apis.functional.chatting.start(
+        {
+          host: 'http://localhost:37001',
+        },
+        listener
+      );
 
-      sendButton.addEventListener('click', (event) => {
+      sendButton.addEventListener('click', () => {
         const message = chatInput.value.trim();
         if (message) {
           // Create a new message element
@@ -112,17 +117,22 @@
           // Scroll to the bottom of the chat container
           chatContainer.scrollTop = chatContainer.scrollHeight;
 
+          // Send message to the driver
           driver.send(message);
         }
-      })
+      });
 
-      // Optional: Press Enter to send a message
-      chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
+      // Handle keyboard input for Shift+Enter and Enter
+      chatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          // Enter -> Send message
+          e.preventDefault(); // Prevent default Enter behavior
           sendButton.click();
+        } else if (e.key === 'Enter' && e.shiftKey) {
+          // Shift + Enter -> Allow default behavior (new line)
         }
       });
-    }
+    };
   </script>
 </head>
 
@@ -131,7 +141,7 @@
     <!-- Messages will appear here -->
   </div>
   <div class="chat-input">
-    <input type="text" id="chatInput" placeholder="Type your message..." />
+    <textarea id="chatInput" placeholder="Type your message..." rows="3"></textarea>
     <button id="sendButton">Send</button>
   </div>
 </body>
