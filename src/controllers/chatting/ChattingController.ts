@@ -8,10 +8,13 @@ export interface IChatting {
 
 export class Chatter implements IChatting {
   public constructor(private readonly listener: Driver<IListener>) {
-    console.log(this.listener.name);
+    console.log("listener: ", this.listener.name);
   }
 
-  send() {}
+  async send() {
+    this.listener.on({ type: "chat" }).catch(console.error);
+    return "hi";
+  }
 }
 
 export interface IListener {
@@ -20,7 +23,7 @@ export interface IListener {
 
 export namespace IListener {
   export interface IEvent {
-    type: string;
+    type: "chat";
   }
 }
 

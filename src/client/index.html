@@ -3,20 +3,115 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=100%, initial-scale=1.0">
-  <title>Document</title>
+  <title>Simple Chat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+
+    .chat-message {
+      margin: 5px 0;
+      padding: 8px;
+      border-radius: 5px;
+      background-color: #f1f1f1;
+    }
+
+    .chat-input {
+      display: flex;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-left: 5px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
   <script type="module" src="./libraries/index.js.umd.js"></script>
   <script>
     window.onload = async () => {
 
+      const listener = {
+        on: (event) => stack.push(event),
+      };
+
       const { connector, driver } = await window.apis.functional.chatting.start({
         host: 'http://localhost:37001',
+      }, listener)
+
+
+      const chatContainer = document.getElementById('chatContainer');
+      const chatInput = document.getElementById('chatInput');
+      const sendButton = document.getElementById('sendButton');
+
+      sendButton.addEventListener('click', (event) => {
+        const message = chatInput.value.trim();
+        if (message) {
+          // Create a new message element
+          const messageElement = document.createElement('div');
+          messageElement.classList.add('chat-message');
+          messageElement.textContent = message;
+
+          // Append the message to the chat container
+          chatContainer.appendChild(messageElement);
+
+          // Clear the input field
+          chatInput.value = '';
+
+          // Scroll to the bottom of the chat container
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
       })
+
+      // Optional: Press Enter to send a message
+      chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          sendButton.click();
+        }
+      });
     }
   </script>
 </head>
 
 <body>
-  hi
+  <div class="chat-container" id="chatContainer">
+    <!-- Messages will appear here -->
+  </div>
+  <div class="chat-input">
+    <input type="text" id="chatInput" placeholder="Type your message..." />
+    <button id="sendButton">Send</button>
+  </div>
 </body>
 
 </html>
