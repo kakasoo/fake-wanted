@@ -9,7 +9,7 @@ import { Actor } from "../../decorators/Actor";
 
 @Controller("chatting")
 export class ChattingController {
-  async chat(@Actor() user: IEntity, @TypedBody() input: IChatting.IChatInput) {
+  async chat(@Actor() user: IEntity, @TypedBody() input: IChatting.IChatInput): Promise<IChatting.IResponse | null> {
     return AnswerAgent.send(user)(input);
   }
 }
