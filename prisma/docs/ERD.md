@@ -231,6 +231,7 @@ erDiagram
   String user_id FK
   String room_id FK
   String speaker
+  String message
   DateTime created_at
   DateTime deleted_at "nullable"
 }
@@ -257,6 +258,7 @@ erDiagram
   - `speaker`
     > Speaker
     > ex) 'user' | 'assistant'
+  - `message`: message
   - `created_at`: 
   - `deleted_at`: 
 
