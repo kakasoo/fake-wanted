@@ -1,6 +1,6 @@
 import { Driver } from "tgrid";
 
-import { AnswerAgent } from "../../../controllers/chatting/agents/answer";
+import { AnswerAgent } from "../../../agents/answer";
 import { IChattingDriver } from "./IChattingDriver";
 import { IListener } from "./IListener";
 

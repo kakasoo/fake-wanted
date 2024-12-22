@@ -5,11 +5,12 @@ import { join } from "path";
 import { Driver } from "tgrid";
 import typia from "typia";
 
+import { IChatting } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IChatting";
 import { IChattingDriver } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IChattingDriver";
 import { IListener } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IListener";
 
-import { MyConfiguration } from "../../../MyConfiguration";
-import { createQueryParameter } from "../../../utils/createQueryParameter";
+import { MyConfiguration } from "../MyConfiguration";
+import { createQueryParameter } from "../utils/createQueryParameter";
 import { MessageType } from "./messageType";
 
 export namespace AnswerAgent {
@@ -80,6 +81,12 @@ export namespace AnswerAgent {
     return token;
   }
 
+  /**
+   * WebSocket API
+   *
+   * @param listener
+   * @param input
+   */
   export async function answer(listener: Driver<IListener>, input: IChattingDriver.ISendInput) {
     const stream = await generate(input);
     const token = getContent(stream);
@@ -96,7 +103,6 @@ export namespace AnswerAgent {
       .catch(console.error);
 
     if (isFillArgument) {
-      console.log("isFillArgument: ", isFillArgument);
       const queryParameter = createQueryParameter(parsed.parameters.query ?? {});
       const response = await fetch(
         `http://localhost:${MyConfiguration.API_PORT()}${parsed.pathname}?${queryParameter}`,
@@ -125,19 +131,61 @@ export namespace AnswerAgent {
         .catch(console.error);
     } else {
     }
+  }
 
-    // new ReadableStream({
-    //   async start(controller) {
-    //     for await (const chunk of stream) {
-    //       const output = chunk.choices.at(0)?.delta.content ?? "";
-    //       listener
-    //         .on({ type: "chat", token: `${output}` })
-    //         .catch(console.error);
-    //     }
-
-    //     listener.on({ type: "endResponse", messageId }).catch(console.error);
-    //     controller.close();
-    //   },
-    // });
+  /**
+   * HTTP API
+   */
+  export async function send(input: IChatting.IChatInput) {
+    return await new OpenAI({
+      apiKey: process.env.OPEN_AI_KEY,
+    }).chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: [
+            "This schema information is information about external APIs that you can call.",
+            "You have to find function that the user requires here.",
+            "If you find a function, you must define the input parameters for executing it.",
+            "[Caution] From here down is the schema.",
+            `${getSchemaInfo()}`,
+            "[Caution] From here, the top is the schema.",
+            "",
+            "All chats with users are talked through the markdown viewer, so you always have to say markdown.",
+            "",
+            "Your response format is always one of them:",
+            '1. `{ "type": "chat", "message": string }`',
+            '2. `{ "type": "selectFunction", "functions": Array<{ method: "get" | "post" | "delete" | "put" | "patch", pathname: string }>, "message": string }`',
+            '3. `{ "type": "fillArgument", "method": "get" | "post" | "delete" | "put" | "patch", pathname: string, "parameters": JSON, "message": string }`',
+            "",
+            "'fillArgument' is JSON, and each JSON object should be mapped under the fki names 'query', 'body', and 'param'.",
+            'for example, { "parameters": { "body": { "query": "EXAMPLE_TEXT" } } }',
+            "[Caution] All message types must adhere to the JSON format.",
+            "'chat' is just sending message as markdown format.",
+            "'selectFunction' is selecting method and method property must be method name like as get, post, delete, put, patch, and pathname, for example, 'monitors/health'",
+            "'fillArguments' is to listen to the user and directly fill the factor values to fill the function.",
+            "If it is not enough to fill yet, you should ask the user to secure the factor, and this question corresponds to the 'chat' type.",
+            "'fillArguments' must not appear before 'selectFunction'.",
+            "'fillArguments' must be an extension of the type of 'selectFunction' because it fills the parameters.",
+            "",
+            "You have to finally get to the stage of calling the function, so you have to talk to the user and finally go to 'fillArguments' three times.",
+            "If you explain this response to the user, the user will decide whether to call the function or not.",
+            "",
+          ].join("\n"),
+        },
+        // {
+        //   role: "assistant",
+        //   content: [
+        //     "This is what I have talked to the user so far.",
+        //     `${JSON.stringify(input.histories, null, 2)}`,
+        //   ].join("\n"),
+        // },
+        {
+          role: "user",
+          content: input.message,
+        },
+      ],
+    });
   }
 }
