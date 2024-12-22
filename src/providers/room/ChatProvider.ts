@@ -4,6 +4,7 @@ import { randomUUID } from "crypto";
 import { IChatting } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IChatting";
 
 import { prisma } from "../common/PrismaProvider";
+import { RoomProvider } from "./RoomProvider";
 
 export namespace ChatProvider {
   export namespace summary {
@@ -44,6 +45,10 @@ export namespace ChatProvider {
   }
 
   export async function create(input: IChatting.ICreateInput) {
+    // 1. Room이 없을 경우를 대비해, 채팅 시작 시 Room 생성 로직을 추가
+    await RoomProvider.findOneOrCreate({ id: input.userId })({ id: input.roomId });
+
+    // 2. Chat을 생성
     const chat = await prisma.chatting.create({
       ...ChatProvider.summary.select(),
       data: {
