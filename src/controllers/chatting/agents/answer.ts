@@ -5,13 +5,15 @@ import { join } from "path";
 import { Driver } from "tgrid";
 import typia from "typia";
 
+import { IChattingDriver } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IChattingDriver";
+import { IListener } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IListener";
+
 import { MyConfiguration } from "../../../MyConfiguration";
 import { createQueryParameter } from "../../../utils/createQueryParameter";
-import { IChattingDriver, IListener } from "../ChattingController";
 import { MessageType } from "./messageType";
 
 export namespace AnswerAgent {
-  async function generate(input: Parameters<IChattingDriver["send"]>[0], additionalPrompt?: string[]) {
+  async function generate(input: IChattingDriver.ISendInput, additionalPrompt?: string[]) {
     return await new OpenAI({
       apiKey: process.env.OPEN_AI_KEY,
     }).chat.completions.create({
@@ -78,7 +80,7 @@ export namespace AnswerAgent {
     return token;
   }
 
-  export async function answer(listener: Driver<IListener>, input: Parameters<IChattingDriver["send"]>[0]) {
+  export async function answer(listener: Driver<IListener>, input: IChattingDriver.ISendInput) {
     const stream = await generate(input);
     const token = getContent(stream);
     const parsed = JSON.parse(token);

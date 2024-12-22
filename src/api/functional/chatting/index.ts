@@ -8,10 +8,8 @@ import type { IConnection } from "@nestia/fetcher";
 import { WebSocketConnector } from "tgrid";
 import type { Driver } from "tgrid";
 
-import type {
-  IChattingDriver,
-  IListener,
-} from "../../../controllers/chatting/ChattingController";
+import type { IChattingDriver } from "../../structures/chatting/IChattingDriver";
+import type { IListener } from "../../structures/chatting/IListener";
 
 /**
  * Start simple chatting.

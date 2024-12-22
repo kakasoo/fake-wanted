@@ -1,37 +1,10 @@
 import { WebSocketRoute } from "@nestia/core";
 import { Controller } from "@nestjs/common";
 import { Driver, WebSocketAcceptor } from "tgrid";
-import { tags } from "typia";
 
-import { AnswerAgent } from "./agents/answer";
-
-export interface IChattingDriver {
-  send: (input: { message: string; histories: IListener.IEvent[] }) => any;
-}
-
-export class Chatter implements IChattingDriver {
-  public constructor(private readonly listener: Driver<IListener>) {
-    console.log("listener: ", this.listener.name);
-  }
-
-  async send(input: Parameters<IChattingDriver["send"]>[0]) {
-    await AnswerAgent.answer(this.listener, input);
-  }
-}
-
-export interface IListener {
-  on(event: IListener.IEvent): void;
-}
-
-export namespace IListener {
-  export interface IEvent {
-    speaker: "user" | "agent";
-    type: "chat";
-    token: string;
-    messageId: string;
-    createdAt: string & tags.Format<"date-time">;
-  }
-}
+import { Chatter } from "@kakasoo/fake-wanted-api/lib/structures/chatting/Chatter";
+import { IChattingDriver } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IChattingDriver";
+import { IListener } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IListener";
 
 @Controller("chatting")
 export class ChattingController {
