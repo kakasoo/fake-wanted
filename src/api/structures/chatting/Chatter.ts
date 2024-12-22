@@ -8,5 +8,7 @@ export class Chatter implements IChattingDriver {
     console.log("listener: ", this.listener.name);
   }
 
-  async send(input: IChattingDriver.ISendInput) {}
+  async send(input: IChattingDriver.ISendInput) {
+    console.log(input);
+  }
 }
