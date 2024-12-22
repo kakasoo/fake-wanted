@@ -1,0 +1,55 @@
+model chatting {
+  //----
+  // COLUMNS
+  //----
+  /// @format uuid
+  id String @id @db.Uuid
+
+  /// @format uuid
+  user_id String @db.Uuid
+
+  /// @format uuid
+  room_id String @db.Uuid
+
+  /// Speaker
+  /// ex) 'user' | 'assistant'
+  speaker String
+
+  /// 
+  created_at DateTime @db.Timestamptz
+
+  /// 
+  deleted_at DateTime? @db.Timestamptz
+
+  user user @relation(fields: [user_id], references: [id])
+  room room @relation(fields: [room_id], references: [id])
+}
+
+model room {
+  //----
+  // COLUMNS
+  //----
+  /// @format uuid
+  id String @id @db.Uuid
+
+  /// 
+  created_at DateTime @db.Timestamptz
+
+  chatting chatting[]
+}
+
+model user {
+  //----
+  // COLUMNS
+  //----
+  /// @format uuid
+  id String @id @db.Uuid
+
+  /// 
+  created_at DateTime @db.Timestamptz
+
+  //----
+  // RELATIONS
+  //----
+  chatting chatting[]
+}

@@ -1,0 +1,17 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["prismaSchemaFolder", "postgresqlExtensions", "views"]
+  binaryTargets   = ["native"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("POSTGRES_URL")
+  extensions = [pg_trgm]
+}
+
+generator markdown {
+  provider = "prisma-markdown"
+  title    = "Black-Agent-Market"
+  output   = "../docs/ERD.md"
+}
