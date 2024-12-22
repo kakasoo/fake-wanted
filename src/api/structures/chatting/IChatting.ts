@@ -3,4 +3,9 @@ export namespace IChatting {
     roomId: string;
     message: string;
   }
+
+  export interface ICreateInput extends IChatting.IChatInput {
+    userId: string;
+    speaker: "user" | "assistent";
+  }
 }
