@@ -22,3 +22,5 @@ export namespace MessageType {
     message: string;
   }
 }
+
+export type MessageType = MessageType.ChatType | MessageType.SelectFunction | MessageType.FillArgument;

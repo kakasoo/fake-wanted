@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import * as readline from "readline";
 
 import * as apis from "../api/functional";
+import { IChatting } from "../api/structures/chatting/IChatting";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -31,7 +32,7 @@ async function main() {
     console.log(`User: ${inputBuffer}`);
 
     // LLM 답변
-    const answer = await apis.chatting.chat(
+    const answers = await apis.chatting.chat(
       {
         host: "http://localhost:37001",
         headers: {
@@ -44,8 +45,8 @@ async function main() {
       },
     );
 
-    answer?.forEach((message) => {
-      console.log(`Agent: ${message}`);
+    answers?.forEach((answer: IChatting.IResponse) => {
+      console.log(`Agent: ${answer.message}`);
     });
   }
 }
