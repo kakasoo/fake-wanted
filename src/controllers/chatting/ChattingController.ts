@@ -5,6 +5,7 @@ import { IChatting } from "@kakasoo/fake-wanted-api/lib/structures/chatting/ICha
 import { IEntity } from "@kakasoo/fake-wanted-api/lib/structures/common/IEntity";
 
 import { AnswerAgent } from "../../agents/answer";
+import { Actor } from "../../decorators/Actor";
 
 @Controller("chatting")
 export class ChattingController {
