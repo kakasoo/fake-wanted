@@ -38,8 +38,8 @@ model room {
   /// 
   created_at DateTime @db.Timestamptz
 
-  chatting chatting[]
-  user     user       @relation(fields: [user_id], references: [id])
+  chattings chatting[]
+  user      user       @relation(fields: [user_id], references: [id])
 }
 
 model user {
@@ -55,6 +55,6 @@ model user {
   //----
   // RELATIONS
   //----
-  chatting chatting[]
-  room     room[]
+  chattings chatting[]
+  room      room[]
 }
