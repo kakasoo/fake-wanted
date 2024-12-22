@@ -44,7 +44,9 @@ async function main() {
       },
     );
 
-    console.log(`Agent: ${answer?.message}`);
+    answer?.forEach((message) => {
+      console.log(`Agent: ${message}`);
+    });
   }
 }
 

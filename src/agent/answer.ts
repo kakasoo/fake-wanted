@@ -1,14 +1,33 @@
+import axios from "axios";
 import OpenAI from "openai";
+import typia from "typia";
 
 import { IChatting } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IChatting";
 
+import { MyConfiguration } from "../MyConfiguration";
+import { MessageType } from "../api/structures/agent/IMessageType";
 import { IEntity } from "../api/structures/common/IEntity";
 import { ChatProvider } from "../providers/room/ChatProvider";
 import { RoomProvider } from "../providers/room/RoomProvider";
+import { createQueryParameter } from "../utils/createQueryParameter";
 import { History } from "./history";
 import { System } from "./system";
 
 export namespace AnswerAgent {
+  export const functionCall = async (parsed: MessageType.FillArgument) => {
+    const query = createQueryParameter(parsed.parameters.query ?? {});
+    const url = `http://localhost:${MyConfiguration.API_PORT}${parsed.pathname}?${query}`;
+
+    let response;
+    if (parsed.method === "get") {
+      response = await axios.get(url, {});
+    } else {
+      response = await axios[parsed.method](url, parsed.parameters.body ?? {});
+    }
+
+    return response.data;
+  };
+
   export const opener = (user: IEntity) => async (input: IChatting.IChatInput) => {
     // 1. 유저의 방과 히스토리 정보를 조회한다.
     const room = await RoomProvider.findOneOrCreate(user)({ id: input.roomId });
@@ -26,7 +45,7 @@ export namespace AnswerAgent {
    */
   export const send =
     (user: IEntity) =>
-    async (input: IChatting.IChatInput): Promise<IChatting.IResponse | null> => {
+    async (input: IChatting.IChatInput): Promise<IChatting.IResponse[] | null> => {
       // 1. 방이 생성되지 않은 경우라면 system prompt를 주입한다.
       const metadata = { userId: user.id, roomId: input.roomId };
       await AnswerAgent.opener(user)(input);
@@ -52,16 +71,30 @@ export namespace AnswerAgent {
       });
 
       console.log(JSON.stringify(History.prompt(room), null, 2));
-
       const answer = chatCompletion.choices[0].message.content;
       if (answer !== null) {
         // 5. LLM 응답이 있는 경우 발화 내용을 히스토리에 저장한다.
-        return await ChatProvider.create({
+        const response = await ChatProvider.create({
           userId: user.id,
           roomId: input.roomId,
           speaker: "assistent",
           message: answer,
         });
+
+        const parsed = typia.json.isParse<MessageType.FillArgument>(answer);
+        if (parsed !== null) {
+          const called = await AnswerAgent.functionCall(parsed);
+          const functionCallHistory = await ChatProvider.create({
+            userId: user.id,
+            roomId: input.roomId,
+            speaker: "assistent",
+            message: JSON.stringify(called, null, 2),
+          });
+
+          return [response, functionCallHistory];
+        }
+
+        return [response];
       }
 
       return null;

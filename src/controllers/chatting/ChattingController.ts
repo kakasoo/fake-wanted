@@ -10,7 +10,7 @@ import { Actor } from "../../decorators/Actor";
 @Controller("chatting")
 export class ChattingController {
   @core.TypedRoute.Post()
-  async chat(@Actor() user: IEntity, @TypedBody() input: IChatting.IChatInput): Promise<IChatting.IResponse | null> {
+  async chat(@Actor() user: IEntity, @TypedBody() input: IChatting.IChatInput): Promise<IChatting.IResponse[] | null> {
     return AnswerAgent.send(user)(input);
   }
 }

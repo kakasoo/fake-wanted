@@ -40,7 +40,7 @@ export async function chat(
 }
 export namespace chat {
   export type Input = IChatting.IChatInput;
-  export type Output = null | IChatting.IResponse;
+  export type Output = null | Array<IChatting.IResponse>;
 
   export const METADATA = {
     method: "POST",
@@ -59,7 +59,8 @@ export namespace chat {
   export const path = () => "/chatting";
   export const random = (
     g?: Partial<typia.IRandomGenerator>,
-  ): null | IChatting.IResponse => typia.random<null | IChatting.IResponse>(g);
+  ): null | Array<IChatting.IResponse> =>
+    typia.random<null | Array<IChatting.IResponse>>(g);
   export const simulate = (
     connection: IConnection,
     input: IChatting.IChatInput,
