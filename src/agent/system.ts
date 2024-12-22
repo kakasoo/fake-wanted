@@ -9,7 +9,7 @@ export namespace System {
     return schema;
   }
 
-  export function prompt(): ChatCompletionSystemMessageParam {
+  export function prompt() {
     return {
       role: "system",
       content: [
@@ -41,6 +41,6 @@ export namespace System {
         "If you explain this response to the user, the user will decide whether to call the function or not.",
         "",
       ].join("\n"),
-    };
+    } satisfies ChatCompletionSystemMessageParam;
   }
 }

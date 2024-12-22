@@ -29,7 +29,7 @@ export namespace RoomProvider {
   };
 
   export const create = (user: IEntity) => async (room: IEntity) => {
-    await prisma.room.create({
+    return await prisma.room.create({
       ...RoomProvider.summary.select(),
       data: {
         id: room.id,
@@ -74,6 +74,7 @@ export namespace RoomProvider {
             room_id: chatting.room_id,
             user_id: chatting.user_id,
             speaker: chatting.speaker,
+            message: chatting.message,
             created_at: chatting.created_at.toISOString(),
             deleted_at: chatting.deleted_at?.toISOString(),
           };

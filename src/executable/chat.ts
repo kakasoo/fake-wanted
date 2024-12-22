@@ -19,6 +19,7 @@ const askQuestion = (prompt: string): Promise<string> => {
 };
 
 async function main() {
+  const roomId = randomUUID();
   const user = await apis.user.create({ host: "http://localhost:37001" });
 
   let input = "";
@@ -38,7 +39,7 @@ async function main() {
         },
       },
       {
-        roomId: randomUUID(),
+        roomId: roomId,
         message: inputBuffer,
       },
     );

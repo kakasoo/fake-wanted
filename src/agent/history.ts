@@ -17,6 +17,7 @@ export namespace History {
             room_id: history.room_id,
             user_id: history.user_id,
             speaker: history.speaker,
+            message: history.message,
             created_at: history.created_at,
           }),
         };
@@ -27,6 +28,7 @@ export namespace History {
             room_id: history.room_id,
             user_id: history.user_id,
             speaker: history.speaker,
+            message: history.message,
             created_at: history.created_at,
           }),
         };

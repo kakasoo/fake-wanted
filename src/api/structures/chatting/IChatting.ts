@@ -18,7 +18,7 @@ export namespace IChatting {
 
   export interface ICreateInput extends IChatting.IChatInput {
     userId: string;
-    speaker: "user" | "assistent";
+    speaker: "system" | "user" | "assistent";
   }
 
   export interface IResponse extends Pick<Chatting, "id" | "room_id" | "speaker" | "message" | "created_at"> {}
