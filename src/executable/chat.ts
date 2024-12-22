@@ -1,4 +1,7 @@
+import { randomUUID } from "crypto";
 import * as readline from "readline";
+
+import * as apis from "../api/functional";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -16,6 +19,8 @@ const askQuestion = (prompt: string): Promise<string> => {
 };
 
 async function main() {
+  const user = await apis.user.create({ host: "http://localhost:37001" });
+
   let input = "";
   while (true) {
     input = await askQuestion("문장을 입력하세요 (줄바꿈은 Shift+Enter로 가능, 종료하려면 Ctrl+C): ");
@@ -23,6 +28,22 @@ async function main() {
 
     // 현재까지 입력한 내용 출력
     console.log(`User: ${inputBuffer}`);
+
+    // LLM 답변
+    const answer = await apis.chatting.chat(
+      {
+        host: "http://localhost:37001",
+        headers: {
+          Authorization: user.id,
+        },
+      },
+      {
+        roomId: randomUUID(),
+        message: inputBuffer,
+      },
+    );
+
+    console.log(`Agent: ${answer?.message}`);
   }
 }
 

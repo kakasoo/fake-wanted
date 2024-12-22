@@ -4,6 +4,7 @@ import { join } from "path";
 
 import { ChattingModule } from "./controllers/chatting/ChattingModule";
 import { MonitorModule } from "./controllers/monitors/MonitorModule";
+import { UserModule } from "./controllers/user/UserModule";
 import { WantedModule } from "./controllers/wanted/WantedModule";
 
 @Module({
@@ -12,6 +13,7 @@ import { WantedModule } from "./controllers/wanted/WantedModule";
     MonitorModule,
     WantedModule,
     ChattingModule,
+    UserModule,
   ],
 })
 export class MyModule {}

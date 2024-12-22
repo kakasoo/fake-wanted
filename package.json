@@ -26,7 +26,10 @@
     "package:api": "npm run build:api && cd packages/api && npm publish --access public",
     "start": "npm run build && node lib/executable/server",
     "start:swagger": "ts-node src/executable/swagger.ts",
-    "schema": "ts-node src/executable/schema"
+    "schema": "ts-node src/executable/schema",
+    "------------------------EXECUTE------------------------": "",
+    "execute:chat":"ts-node src/executable/chat.ts"
+
   },
   "repository": {
     "type": "git",
