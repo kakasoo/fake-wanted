@@ -236,6 +236,7 @@ erDiagram
 }
 "room" {
   String id PK
+  String user_id FK
   DateTime created_at
 }
 "user" {
@@ -244,6 +245,7 @@ erDiagram
 }
 "chatting" }o--|| "user" : user
 "chatting" }o--|| "room" : room
+"room" }o--|| "user" : user
 ```
 
 ### `chatting`
@@ -262,6 +264,7 @@ erDiagram
 
 **Properties**
   - `id`: 
+  - `user_id`: 
   - `created_at`: 
 
 ### `user`

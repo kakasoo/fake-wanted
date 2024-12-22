@@ -32,10 +32,14 @@ model room {
   /// @format uuid
   id String @id @db.Uuid
 
+  /// @format uuid
+  user_id String @db.Uuid
+
   /// 
   created_at DateTime @db.Timestamptz
 
   chatting chatting[]
+  user     user       @relation(fields: [user_id], references: [id])
 }
 
 model user {
@@ -52,4 +56,5 @@ model user {
   // RELATIONS
   //----
   chatting chatting[]
+  room     room[]
 }
