@@ -37,7 +37,12 @@ export namespace AnswerAgent {
     const answer = chatCompletion.choices[0].message.content;
     if (answer !== null) {
       // 4. LLM 응답이 있는 경우 발화 내용을 히스토리에 저장한다.
-      await ChatProvider.create({ userId: user.id, roomId: input.roomId, speaker: "assistent", message: answer });
+      return await ChatProvider.create({
+        userId: user.id,
+        roomId: input.roomId,
+        speaker: "assistent",
+        message: answer,
+      });
     }
   };
 }
