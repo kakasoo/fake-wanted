@@ -1,6 +1,5 @@
 import { Driver } from "tgrid";
 
-import { AnswerAgent } from "../../../agents/answer";
 import { IChattingDriver } from "./IChattingDriver";
 import { IListener } from "./IListener";
 
@@ -9,7 +8,5 @@ export class Chatter implements IChattingDriver {
     console.log("listener: ", this.listener.name);
   }
 
-  async send(input: IChattingDriver.ISendInput) {
-    await AnswerAgent.answer(this.listener, input);
-  }
+  async send(input: IChattingDriver.ISendInput) {}
 }
