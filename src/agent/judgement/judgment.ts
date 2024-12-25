@@ -4,6 +4,7 @@ import { IChatting } from "@kakasoo/fake-wanted-api/lib/structures/chatting/ICha
 import { IEntity } from "@kakasoo/fake-wanted-api/lib/structures/common/IEntity";
 
 import { RoomProvider } from "../../providers/room/RoomProvider";
+import { AnswerAgent } from "../answer/answer";
 import { Scribe } from "../scribe/scribe";
 
 /**
@@ -13,11 +14,6 @@ import { Scribe } from "../scribe/scribe";
  * 따라서, `Judgment`의 역할은 어떤 응답을 할지를 의미한다고 볼 수 있다.
  */
 export namespace JudgmentAgent {
-  export const answer = (user: IEntity) => (input: IChatting.IChatInput) => {
-    const metadata = { userId: user.id, roomId: input.roomId };
-    return metadata;
-  };
-
   export const chat =
     (room: Awaited<ReturnType<ReturnType<typeof RoomProvider.at>>>) => async (input: { message: string }) => {
       const chatCompletion = await new OpenAI({
@@ -34,5 +30,11 @@ export namespace JudgmentAgent {
       });
 
       return chatCompletion;
+    };
+
+  export const answer =
+    (user: IEntity) =>
+    async (input: IChatting.IChatInput): Promise<IChatting.IResponse[] | null> => {
+      return AnswerAgent.answer(user)(input);
     };
 }

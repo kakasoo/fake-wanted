@@ -51,7 +51,7 @@ export namespace AnswerAgent {
   /**
    * HTTP API
    */
-  export const send =
+  export const answer =
     (user: IEntity) =>
     async (input: IChatting.IChatInput): Promise<IChatting.IResponse[] | null> => {
       // 1. 방이 생성되지 않은 경우라면 system prompt를 주입한다.
