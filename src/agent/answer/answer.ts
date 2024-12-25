@@ -12,6 +12,7 @@ import { createQueryParameter } from "../../utils/createQueryParameter";
 import { Scribe } from "../scribe/scribe";
 import { AgentUtil } from "../utils";
 import { MessageType } from "./IMessageType";
+import { System } from "./system";
 
 export namespace AnswerAgent {
   export const functionCall = async (parsed: MessageType.FillArgument) => {
@@ -31,12 +32,15 @@ export namespace AnswerAgent {
 
   export const chat =
     (room: Awaited<ReturnType<ReturnType<typeof RoomProvider.at>>>) => async (input: { message: string }) => {
+      const histories = Scribe.prompt(room, ["answer"]);
+      const systemPrompt = histories.find((el) => el.role === "system" && el.role === "system");
       const chatCompletion = await new OpenAI({
         apiKey: process.env.OPEN_AI_KEY,
       }).chat.completions.create({
         model: "gpt-4o-mini",
         messages: [
-          ...Scribe.prompt(room),
+          ...(systemPrompt ? [] : [System.prompt()]), // Answer 용 시스템 프롬프트가 주입 안된 경우에 주입한다.
+          ...histories,
           {
             role: "user",
             content: input.message,
