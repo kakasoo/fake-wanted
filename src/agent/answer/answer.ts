@@ -6,12 +6,12 @@ import typia from "typia";
 import { IChatting } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IChatting";
 
 import { MyConfiguration } from "../../MyConfiguration";
-import { MessageType } from "../../api/structures/agent/IMessageType";
 import { IEntity } from "../../api/structures/common/IEntity";
 import { ChatProvider } from "../../providers/room/ChatProvider";
 import { RoomProvider } from "../../providers/room/RoomProvider";
 import { createQueryParameter } from "../../utils/createQueryParameter";
 import { Scribe } from "../scribe/scribe";
+import { MessageType } from "./IMessageType";
 import { System } from "./system";
 
 export namespace AnswerAgent {
