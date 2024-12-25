@@ -24,7 +24,7 @@ export namespace JudgementAgent {
       }).chat.completions.create({
         model: "gpt-4o-mini",
         messages: [
-          ...Scribe.prompt(room), // 이전 대화 내역을 주입
+          ...Scribe.prompt(room, ["judgement"]), // 이전 대화 내역을 주입
           System.prompt(), // Judgement의 시스템 프롬프트를 주입
           {
             role: "user",

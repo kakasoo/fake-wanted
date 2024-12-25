@@ -22,7 +22,11 @@ export namespace Opener {
     const metadata = { userId: user.id, roomId: input.roomId };
     if (room.chattings.length === 0) {
       const systemPrompt = System.prompt();
-      await ChatProvider.create({ ...metadata, speaker: "system", message: systemPrompt.content, role: "opener" });
+
+      // 시스템 프롬프트를 지정안할 수도 있기 때문에, 만약을 대비해 메세지가 있는 경우에만 주입되도록 한다.
+      if (systemPrompt.content.length > 0) {
+        await ChatProvider.create({ ...metadata, speaker: "system", message: systemPrompt.content, role: "opener" });
+      }
     }
   };
 }

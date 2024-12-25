@@ -30,7 +30,7 @@ export namespace Scribe {
         // 시스템 프롬프트가 아닌 경우는 대화 맥락이므로 전부 허용해야 한다.
         return true;
       })
-      .map((history): ChatCompletionMessageParam => {
+      .map((history): ChatCompletionMessageParam & { content: string } => {
         const role = history.speaker as "user" | "assistant" | "system";
         if (role === "user") {
           return {
@@ -42,7 +42,7 @@ export namespace Scribe {
               message: history.message,
               created_at: history.created_at,
             }),
-          };
+          } satisfies ChatCompletionMessageParam;
         } else if (role === "system") {
           return {
             role: "system",
@@ -54,9 +54,8 @@ export namespace Scribe {
               message: history.message,
               created_at: history.created_at,
             }),
-          };
-        }
-        {
+          } satisfies ChatCompletionMessageParam;
+        } else {
           return {
             role: "assistant",
             content: JSON.stringify({
@@ -66,7 +65,7 @@ export namespace Scribe {
               message: history.message,
               created_at: history.created_at,
             }),
-          };
+          } satisfies ChatCompletionMessageParam;
         }
       });
   }

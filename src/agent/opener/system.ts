@@ -13,6 +13,8 @@ export namespace System {
     return {
       role: "system",
       content: [
+        "This system prompt is a system prompt that is injected into all agents and is injected only once in the entire conversation history.",
+        "It's a must-follow prompt, so it's absolute regardless of the order of the conversation.",
         // "This schema information is information about external APIs that you can call.",
         // "You have to find function that the user requires here.",
         // "If you find a function, you must define the input parameters for executing it.",
