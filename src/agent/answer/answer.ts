@@ -9,7 +9,6 @@ import { IEntity } from "../../api/structures/common/IEntity";
 import { ChatProvider } from "../../providers/room/ChatProvider";
 import { RoomProvider } from "../../providers/room/RoomProvider";
 import { createQueryParameter } from "../../utils/createQueryParameter";
-import { Opener } from "../opener/opener";
 import { Scribe } from "../scribe/scribe";
 import { AgentUtil } from "../utils";
 import { MessageType } from "./IMessageType";
@@ -54,20 +53,16 @@ export namespace AnswerAgent {
   export const answer =
     (user: IEntity) =>
     async (input: IChatting.IChatInput): Promise<IChatting.IResponse[] | null> => {
-      // 1. 방이 생성되지 않은 경우라면 system prompt를 주입한다.
-      // 2. 유저가 발화한 내용을 저장한다.
-      await Opener.open(user)(input);
-
-      // 3. 다시 방의 최신 대화 내용을 불러온다.
+      // 1. 다시 방의 최신 대화 내용을 불러온다.
       const room = await RoomProvider.at(user)({ id: input.roomId });
 
-      // 4. 유저의 발화 내용을 기반으로 응답을 호출한다.
+      // 2. 유저의 발화 내용을 기반으로 응답을 호출한다.
       const chatCompletion = await AnswerAgent.chat(room)(input);
 
       const answer = AgentUtil.getContent("answer")(chatCompletion);
       console.log(0);
       if (answer !== null) {
-        // 5. LLM 응답이 있는 경우 발화 내용을 히스토리에 저장한다.
+        // 3. LLM 응답이 있는 경우 발화 내용을 히스토리에 저장한다.
         const response = await ChatProvider.create({
           userId: user.id,
           roomId: input.roomId,

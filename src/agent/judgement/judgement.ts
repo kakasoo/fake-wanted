@@ -5,8 +5,10 @@ import { IEntity } from "@kakasoo/fake-wanted-api/lib/structures/common/IEntity"
 
 import { RoomProvider } from "../../providers/room/RoomProvider";
 import { AnswerAgent } from "../answer/answer";
+import { Opener } from "../opener/opener";
 import { Scribe } from "../scribe/scribe";
 import { AgentUtil } from "../utils";
+import { System } from "./system";
 
 /**
  * 유저의 발화가 들어올 때 최초의 응답을 `Judgement` 할 것이다.
@@ -22,7 +24,8 @@ export namespace JudgementAgent {
       }).chat.completions.create({
         model: "gpt-4o-mini",
         messages: [
-          ...Scribe.prompt(room),
+          ...Scribe.prompt(room), // 이전 대화 내역을 주입
+          System.prompt(), // Judgement의 시스템 프롬프트를 주입
           {
             role: "user",
             content: input.message,
@@ -36,6 +39,14 @@ export namespace JudgementAgent {
   export const answer =
     (user: IEntity) =>
     async (input: IChatting.IChatInput): Promise<IChatting.IResponse[] | null> => {
-      return AnswerAgent.answer(user)(input);
+      await Opener.open(user)(input);
+      const room = await RoomProvider.at(user)({ id: input.roomId });
+      const response = await JudgementAgent.chat(room)({ message: input.message });
+      if (response === "chat") {
+        // Chat인 경우 AnswerAgent의 answer로 이어지게 한다.
+        return AnswerAgent.answer(user)(input);
+      } else {
+        throw new Error(`invalid judgement response type: ${response}`);
+      }
     };
 }
