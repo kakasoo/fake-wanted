@@ -1,8 +1,8 @@
 import { ChatCompletionMessageParam } from "openai/resources";
 
-import { RoomProvider } from "../providers/room/RoomProvider";
+import { RoomProvider } from "../../providers/room/RoomProvider";
 
-export namespace History {
+export namespace Scribe {
   export function prompt(room: Awaited<ReturnType<ReturnType<typeof RoomProvider.at>>>) {
     if (room.chattings.length === 0) {
       return [];

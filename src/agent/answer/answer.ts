@@ -11,7 +11,7 @@ import { IEntity } from "../../api/structures/common/IEntity";
 import { ChatProvider } from "../../providers/room/ChatProvider";
 import { RoomProvider } from "../../providers/room/RoomProvider";
 import { createQueryParameter } from "../../utils/createQueryParameter";
-import { History } from "../history";
+import { Scribe } from "../scribe/scribe";
 import { System } from "./system";
 
 export namespace AnswerAgent {
@@ -49,7 +49,7 @@ export namespace AnswerAgent {
       }).chat.completions.create({
         model: "gpt-4o-mini",
         messages: [
-          ...History.prompt(room),
+          ...Scribe.prompt(room),
           {
             role: "user",
             content: input.message,
