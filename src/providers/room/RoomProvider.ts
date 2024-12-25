@@ -74,6 +74,7 @@ export namespace RoomProvider {
             room_id: chatting.room_id,
             user_id: chatting.user_id,
             speaker: chatting.speaker,
+            role: chatting.role,
             message: chatting.message,
             created_at: chatting.created_at.toISOString(),
             deleted_at: chatting.deleted_at?.toISOString(),

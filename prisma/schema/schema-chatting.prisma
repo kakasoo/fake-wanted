@@ -12,8 +12,14 @@ model chatting {
   room_id String @db.Uuid
 
   /// Speaker
-  /// ex) 'user' | 'assistant'
+  /// ex) 'user' | 'assistant' | 'system'
   speaker String
+
+  /// Role
+  ///
+  /// 더 세부적인 항목으로 system 프롬프트를 분리한 경우를 의미한다.
+  /// 'answer' | 'opener' | 'scribe' | 'selectFunction' | 'fillArgument' | 'runFunction'
+  role String?
 
   /// message
   message String

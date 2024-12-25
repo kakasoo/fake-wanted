@@ -231,6 +231,7 @@ erDiagram
   String user_id FK
   String room_id FK
   String speaker
+  String role "nullable"
   String message
   DateTime created_at
   DateTime deleted_at "nullable"
@@ -257,7 +258,12 @@ erDiagram
   - `room_id`: 
   - `speaker`
     > Speaker
-    > ex) 'user' | 'assistant'
+    > ex) 'user' | 'assistant' | 'system'
+  - `role`
+    > Role
+    > 
+    > 더 세부적인 항목으로 system 프롬프트를 분리한 경우를 의미한다.
+    > 'answer' | 'opener' | 'scribe' | 'selectFunction' | 'fillArgument' | 'runFunction'
   - `message`: message
   - `created_at`: 
   - `deleted_at`: 
