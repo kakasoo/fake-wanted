@@ -6,7 +6,10 @@ export namespace MessageType {
 
   export interface SelectFunction {
     type: "selectFunction";
-    functions: Array<{ method: "get" | "post" | "delete" | "put" | "patch"; pathname: string }>;
+    functions: Array<{
+      method: "get" | "post" | "delete" | "put" | "patch";
+      pathname: string;
+    }>;
     message: string;
   }
 
