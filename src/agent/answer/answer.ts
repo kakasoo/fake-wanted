@@ -5,13 +5,13 @@ import typia from "typia";
 
 import { IChatting } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IChatting";
 
-import { MyConfiguration } from "../MyConfiguration";
-import { MessageType } from "../api/structures/agent/IMessageType";
-import { IEntity } from "../api/structures/common/IEntity";
-import { ChatProvider } from "../providers/room/ChatProvider";
-import { RoomProvider } from "../providers/room/RoomProvider";
-import { createQueryParameter } from "../utils/createQueryParameter";
-import { History } from "./history";
+import { MyConfiguration } from "../../MyConfiguration";
+import { MessageType } from "../../api/structures/agent/IMessageType";
+import { IEntity } from "../../api/structures/common/IEntity";
+import { ChatProvider } from "../../providers/room/ChatProvider";
+import { RoomProvider } from "../../providers/room/RoomProvider";
+import { createQueryParameter } from "../../utils/createQueryParameter";
+import { History } from "../history";
 import { System } from "./system";
 
 export namespace AnswerAgent {
@@ -106,21 +106,27 @@ export namespace AnswerAgent {
         });
 
         console.log(1);
-        const parsed = typia.is<MessageType.FillArgument>(answer);
+        const isFillArguementType = typia.is<MessageType.FillArgument>(answer);
         console.log(2);
-        if (parsed === true) {
+        if (isFillArguementType === true) {
           console.log(3);
-          const called = await AnswerAgent.functionCall(answer);
+          const called: unknown = await AnswerAgent.functionCall(answer);
           console.log(4);
-          const functionCallHistory = await ChatProvider.create({
+          await ChatProvider.create({
             userId: user.id,
             roomId: input.roomId,
             speaker: "system",
-            message: JSON.stringify(called, null, 2),
+            message: [
+              "The server called the function on behalf of LLM.",
+              "Please explain to the user based on this response.",
+              "The below code is result of a function response called by the server on behalf of LLM.",
+              JSON.stringify(called, null, 2),
+              "The above code is result of a function response called by the server on behalf of LLM.",
+            ].join("\n"),
           });
-          console.log(5);
+          console.log(5, called);
 
-          const chatCompletion = await AnswerAgent.chat(room)({ message: called });
+          const chatCompletion = await AnswerAgent.chat(room)({ message: JSON.stringify(called, null, 2) });
           console.log(6);
           const docent = AnswerAgent.getContent(chatCompletion);
           console.log(7);
@@ -134,7 +140,7 @@ export namespace AnswerAgent {
             });
             console.log(9);
 
-            return [response, functionCallHistory, docentHistory];
+            return [response, docentHistory];
           }
           console.log(10);
         }

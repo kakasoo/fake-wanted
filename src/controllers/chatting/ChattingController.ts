@@ -4,7 +4,7 @@ import { Controller } from "@nestjs/common";
 import { IChatting } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IChatting";
 import { IEntity } from "@kakasoo/fake-wanted-api/lib/structures/common/IEntity";
 
-import { AnswerAgent } from "../../agent/answer";
+import { AnswerAgent } from "../../agent/answer/answer";
 import { Actor } from "../../decorators/Actor";
 
 @Controller("chatting")
