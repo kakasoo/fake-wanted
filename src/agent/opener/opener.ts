@@ -22,7 +22,7 @@ export namespace Opener {
     const metadata = { userId: user.id, roomId: input.roomId };
     if (room.chattings.length === 0) {
       const systemPrompt = System.prompt();
-      await ChatProvider.create({ ...metadata, speaker: "system", message: systemPrompt.content });
+      await ChatProvider.create({ ...metadata, speaker: "system", message: systemPrompt.content, role: "opener" });
     }
   };
 }
