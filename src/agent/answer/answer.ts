@@ -73,6 +73,7 @@ export namespace AnswerAgent {
           roomId: input.roomId,
           speaker: "assistent",
           message: answer.message,
+          role: null,
         });
 
         console.log(1);
@@ -93,6 +94,7 @@ export namespace AnswerAgent {
               JSON.stringify(called, null, 2),
               "The above code is result of a function response called by the server on behalf of LLM.",
             ].join("\n"),
+            role: "runFunction",
           });
           console.log(5, called);
 
@@ -107,6 +109,7 @@ export namespace AnswerAgent {
               roomId: input.roomId,
               speaker: "assistent",
               message: docent.message,
+              role: null,
             });
             console.log(9);
 

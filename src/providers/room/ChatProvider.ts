@@ -37,11 +37,14 @@ export namespace ChatProvider {
 
   export function collect(input: IChatting.ICreateInput) {
     return {
+      id: randomUUID(),
       user_id: input.userId,
       room_id: input.roomId,
       speaker: input.speaker,
+      role: input.role,
       message: input.message,
-    };
+      created_at: new Date().toISOString(),
+    } satisfies Prisma.chattingCreateManyInput;
   }
 
   export async function create(input: IChatting.ICreateInput) {
@@ -51,11 +54,7 @@ export namespace ChatProvider {
     // 2. Chat을 생성
     const chat = await prisma.chatting.create({
       ...ChatProvider.summary.select(),
-      data: {
-        id: randomUUID(),
-        created_at: new Date().toISOString(),
-        ...ChatProvider.collect(input),
-      },
+      data: ChatProvider.collect(input),
     });
 
     return ChatProvider.summary.transform(chat);

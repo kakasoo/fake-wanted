@@ -1,5 +1,7 @@
 import { tags } from "typia";
 
+import { IAgent } from "../agent/IAgent";
+
 export interface Chatting {
   id: string & tags.Format<"uuid">;
   room_id: string & tags.Format<"uuid">;
@@ -19,6 +21,7 @@ export namespace IChatting {
   export interface ICreateInput extends IChatting.IChatInput {
     userId: string;
     speaker: "system" | "user" | "assistent";
+    role: IAgent.Role;
   }
 
   export interface IResponse extends Pick<Chatting, "id" | "room_id" | "speaker" | "message" | "created_at"> {}

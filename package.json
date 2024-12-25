@@ -28,8 +28,7 @@
     "start:swagger": "ts-node src/executable/swagger.ts",
     "schema": "ts-node src/executable/schema",
     "------------------------EXECUTE------------------------": "",
-    "execute:chat":"ts-node src/executable/chat.ts"
-
+    "execute:chat": "ts-node src/executable/chat.ts"
   },
   "repository": {
     "type": "git",
@@ -85,6 +84,7 @@
     "write-file-webpack-plugin": "^4.5.1"
   },
   "dependencies": {
+    "@kakasoo/proto-typescript": "^1.28.7",
     "@nestia/core": "^4.4.2",
     "@nestia/fetcher": "^4.4.2",
     "@nestjs/common": "^10.4.15",
