@@ -1,6 +1,5 @@
 import axios from "axios";
 import OpenAI from "openai";
-import { ChatCompletion } from "openai/resources";
 import typia from "typia";
 
 import { IChatting } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IChatting";
@@ -12,6 +11,7 @@ import { RoomProvider } from "../../providers/room/RoomProvider";
 import { createQueryParameter } from "../../utils/createQueryParameter";
 import { Opener } from "../opener/opener";
 import { Scribe } from "../scribe/scribe";
+import { AgentUtil } from "../utils";
 import { MessageType } from "./IMessageType";
 
 export namespace AnswerAgent {
@@ -48,21 +48,6 @@ export namespace AnswerAgent {
       return chatCompletion;
     };
 
-  export const getContent = (input: ChatCompletion): MessageType | null => {
-    const content = input.choices.at(0)?.message.content ?? null;
-    const response = content === null ? null : typia.json.isParse<MessageType | null>(content);
-    if (response === null) {
-      const message = JSON.parse(content ?? "{}").message;
-      if (message) {
-        // 타입이 빠졌을 뿐, 실제로는 메세지가 있는 경우 강제로 chat 타입으로 변환한다.
-        return { type: "chat", message: message };
-      }
-      throw new Error(`invalid message type: ${input}`);
-    }
-
-    return response;
-  };
-
   /**
    * HTTP API
    */
@@ -79,7 +64,7 @@ export namespace AnswerAgent {
       // 4. 유저의 발화 내용을 기반으로 응답을 호출한다.
       const chatCompletion = await AnswerAgent.chat(room)(input);
 
-      const answer = AnswerAgent.getContent(chatCompletion);
+      const answer = AgentUtil.getContent("answer")(chatCompletion);
       console.log(0);
       if (answer !== null) {
         // 5. LLM 응답이 있는 경우 발화 내용을 히스토리에 저장한다.
@@ -113,7 +98,7 @@ export namespace AnswerAgent {
 
           const chatCompletion = await AnswerAgent.chat(room)({ message: JSON.stringify(called, null, 2) });
           console.log(6);
-          const docent = AnswerAgent.getContent(chatCompletion);
+          const docent = AgentUtil.getContent("answer")(chatCompletion);
           console.log(7);
           if (docent) {
             console.log(8);
