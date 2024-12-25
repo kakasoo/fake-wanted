@@ -1,8 +1,11 @@
+import OpenAI from "openai";
+
 import { IChatting } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IChatting";
 import { IEntity } from "@kakasoo/fake-wanted-api/lib/structures/common/IEntity";
 
 import { ChatProvider } from "../../providers/room/ChatProvider";
 import { RoomProvider } from "../../providers/room/RoomProvider";
+import { Scribe } from "../scribe/scribe";
 import { System } from "./system";
 
 /**
@@ -27,4 +30,22 @@ export namespace JudgmentAgent {
   export const answer = (user: IEntity) => (input: IChatting.IChatInput) => {
     const metadata = { userId: user.id, roomId: input.roomId };
   };
+
+  export const chat =
+    (room: Awaited<ReturnType<ReturnType<typeof RoomProvider.at>>>) => async (input: { message: string }) => {
+      const chatCompletion = await new OpenAI({
+        apiKey: process.env.OPEN_AI_KEY,
+      }).chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          ...Scribe.prompt(room),
+          {
+            role: "user",
+            content: input.message,
+          },
+        ],
+      });
+
+      return chatCompletion;
+    };
 }
