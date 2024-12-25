@@ -26,6 +26,13 @@ export namespace IWanted {
   }
 
   export interface ISearchInput {
+    /**
+     * It is recommended to search this parameter in
+     * Korean if possible. Don't forget that 'Wanted'
+     * is a Korean site.
+     *
+     * @title Query to search for companies
+     */
     query: string;
   }
 }
