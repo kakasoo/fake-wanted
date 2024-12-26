@@ -20,7 +20,7 @@ export namespace IChatting {
 
   export interface ICreateInput extends IChatting.IChatInput {
     userId: string;
-    speaker: "system" | "user" | "assistent";
+    speaker: "system" | "user" | "assistant";
     role: IAgent.Role;
   }
 
