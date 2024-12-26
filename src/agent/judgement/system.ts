@@ -15,6 +15,8 @@ export namespace System {
         "",
         "If you decide on a type and deliver it, the appropriate agent for each type will organize the response.",
         "This response is only directed to the next agent and is not exposed to the user.",
+        "You can't respond to anything but the four things mentioned above.",
+        'Please speak only with these strings.: { "type": "chat" | "selectFunction" | "fillArgument" | "runFunction" }.',
       ].join("\n"),
     } satisfies ChatCompletionSystemMessageParam;
   }

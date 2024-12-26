@@ -2,6 +2,7 @@ import axios from "axios";
 import OpenAI from "openai";
 import typia from "typia";
 
+import { IAgent } from "@kakasoo/fake-wanted-api/lib/structures/agent/IAgent";
 import { IChatting } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IChatting";
 
 import { MyConfiguration } from "../../MyConfiguration";
@@ -36,7 +37,7 @@ export namespace AnswerAgent {
 
       // answer의 시스템 프롬프트가 1번 이상 들어가는 것을 방지하기 위해 탐색
       const systemPrompt = histories.find((el) => {
-        return el.role === "system" && JSON.parse(el.content).role === "answer";
+        return el.role === "system" && (JSON.parse(el.content).role as IAgent.Role) === "answer";
       });
 
       const chatCompletion = await new OpenAI({
@@ -53,7 +54,7 @@ export namespace AnswerAgent {
         ],
       });
 
-      return chatCompletion;
+      return AgentUtil.getContent("answer")(chatCompletion);
     };
 
   /**
@@ -66,9 +67,8 @@ export namespace AnswerAgent {
       const room = await RoomProvider.at(user)({ id: input.roomId });
 
       // 2. 유저의 발화 내용을 기반으로 응답을 호출한다.
-      const chatCompletion = await AnswerAgent.chat(room)(input);
+      const answer = await AnswerAgent.chat(room)(input);
 
-      const answer = AgentUtil.getContent("answer")(chatCompletion);
       console.log(0);
       if (answer !== null) {
         // 3. LLM 응답이 있는 경우 발화 내용을 히스토리에 저장한다.
@@ -102,9 +102,7 @@ export namespace AnswerAgent {
           });
           console.log(5, called);
 
-          const chatCompletion = await AnswerAgent.chat(room)({ message: JSON.stringify(called, null, 2) });
-          console.log(6);
-          const docent = AgentUtil.getContent("answer")(chatCompletion);
+          const docent = await AnswerAgent.chat(room)({ message: JSON.stringify(called, null, 2) });
           console.log(7);
           if (docent) {
             console.log(8);

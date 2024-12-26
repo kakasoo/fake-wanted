@@ -4,15 +4,6 @@ export namespace MessageType {
     message: string;
   }
 
-  export interface SelectFunction {
-    type: "selectFunction";
-    functions: Array<{
-      method: "get" | "post" | "delete" | "put" | "patch";
-      pathname: string;
-    }>;
-    message: string;
-  }
-
   export interface FillArgument {
     type: "fillArgument";
     method: "get" | "post" | "delete" | "put" | "patch";
@@ -26,4 +17,4 @@ export namespace MessageType {
   }
 }
 
-export type MessageType = MessageType.ChatType | MessageType.SelectFunction | MessageType.FillArgument;
+export type MessageType = MessageType.ChatType;

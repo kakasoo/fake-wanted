@@ -1,3 +1,3 @@
 export namespace MessageType {}
 
-export type MessageType = "chat" | "selectFunction" | "fillArgument" | "runFunction";
+export type MessageType = { type: "chat" | "selectFunction" | "fillArgument" | "runFunction" };
