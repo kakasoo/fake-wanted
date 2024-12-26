@@ -12,7 +12,7 @@ export async function test_api_wanted(connection: api.IConnection): Promise<void
   typia.assert(res);
 }
 
-export async function test_api_wanted_with_fill_argument() {
+export async function test_api_wanted_with_fill_argument_1() {
   const fillArgument = {
     type: "fillArgument",
     method: "get",
@@ -26,5 +26,22 @@ export async function test_api_wanted_with_fill_argument() {
   } as const;
 
   const response = await RunFunctionAgent.functionCall(fillArgument);
-  console.log(response);
+  typia.assert(response);
+}
+
+export async function test_api_wanted_with_fill_argument_2() {
+  const fillArgument = {
+    type: "fillArgument",
+    method: "get",
+    pathname: "/wanted",
+    parameters: {
+      query: { query: "버즈빌" },
+      body: {},
+      param: {},
+    },
+    message: "",
+  } as const;
+
+  const response = await RunFunctionAgent.functionCall(fillArgument);
+  typia.assert(response);
 }

@@ -5,6 +5,7 @@ export type MessageType = {
   functions: Array<{
     method: "get" | "post" | "delete" | "put" | "patch";
     pathname: string;
+    parameters: any;
   }>;
   message: string;
   isSafeMethod: boolean;

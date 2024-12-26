@@ -4,6 +4,7 @@ import { NestFactory } from "@nestjs/core";
 
 import { MyConfiguration } from "./MyConfiguration";
 import { MyModule } from "./MyModule";
+import { HttpExceptionFilter } from "./filters/all-exception.filter";
 
 export class MyBackend {
   private application_?: INestApplication;
@@ -17,6 +18,7 @@ export class MyBackend {
 
     // DO OPEN
     this.application_.enableCors();
+    this.application_.useGlobalFilters(new HttpExceptionFilter());
     await this.application_.listen(MyConfiguration.API_PORT(), "0.0.0.0");
   }
 

@@ -14,7 +14,6 @@ export namespace AnswerAgent {
   export const chat = (room: Awaited<ReturnType<ReturnType<typeof RoomProvider.at>>>) => async () => {
     const histories = Scribe.prompt(room, ["answer", "opener"]);
 
-    // answer의 시스템 프롬프트가 1번 이상 들어가는 것을 방지하기 위해 탐색
     const systemPrompt = histories.find((el) => {
       return el.role === "system" && (JSON.parse(el.content).role as IAgent.Role) === "answer";
     });

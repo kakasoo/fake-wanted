@@ -7,20 +7,20 @@ export namespace IWanted {
     company_tags: string[];
     companies: Array<{
       id: number;
-      logo_img: {
+      logo_img: null | {
         origin: string & tags.Format<"uri">;
         thumb: string & tags.Format<"uri">;
       };
-      title_img: {
+      title_img: null | {
         origin: string & tags.Format<"uri">;
         thumb: string & tags.Format<"uri">;
-        video: any;
+        video: (string & tags.Format<"uri">) | null;
       };
       name: string;
       application_response_stats: any;
       kreditjob_id: any;
       company_tags: Array<{ tag_type_id: any; title: string; kind_title: `${number}` }>;
-      attraction_tags: Array<number>;
+      attraction_tags: null | Array<number>;
     }>;
     category_tags: string[];
   }

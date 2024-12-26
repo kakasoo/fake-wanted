@@ -16,17 +16,20 @@ export namespace FillArgumentAgent {
     async (runFunction: boolean = false) => {
       const histories = Scribe.prompt(room, ["fillArgument", "opener"]);
 
-      // answer의 시스템 프롬프트가 1번 이상 들어가는 것을 방지하기 위해 탐색
       const systemPrompt = histories.find((el) => {
         return el.role === "system" && (JSON.parse(el.content).role as IAgent.Role) === "fillArgument";
       });
+
+      const selectedFunctionHistories = histories.filter(
+        (el) => el.role === "system" && (JSON.parse(el.content).role as IAgent.Role) === "selectFunction",
+      );
 
       const chatCompletion = await new OpenAI({
         apiKey: process.env.OPEN_AI_KEY,
       }).chat.completions.create({
         model: "gpt-4o-mini",
         messages: [
-          ...(systemPrompt ? [] : [System.prompt()]), // Answer 용 시스템 프롬프트가 주입 안된 경우에 주입한다.
+          ...(systemPrompt ? [] : [System.prompt(selectedFunctionHistories)]), // Answer 용 시스템 프롬프트가 주입 안된 경우에 주입한다.
           ...histories,
           ...(runFunction === true
             ? [
@@ -37,6 +40,7 @@ export namespace FillArgumentAgent {
                     "finally return the FillArgument type object that the user wants to call.",
                     "You should look at the query, parameter, and body in the previous conversation and move all the previous values as they are.",
                     "If necessary, you may use the context of the conversation to fill in the insufficient factors.",
+                    "However, the key names originally filled must be kept very strict.",
                   ].join("\n"),
                 } as const,
               ]

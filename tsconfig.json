@@ -74,7 +74,7 @@
          *   - "is": Use typia.is() function
          *   - "validate": Use typia.validate() function
          */
-        "validate": "assert",
+        "validate": "validate",
         /**
          * Validate JSON typed response body.
          * 
@@ -84,7 +84,7 @@
          *   - "is": Use typia.isStringify() function
          *   - "validate": Use typia.validateStringify() function
          */
-        "stringify": "assert" 
+        "stringify": "validate.log" 
       },
       { "transform": "typia/lib/transform" },
       { "transform": "typescript-transform-paths" }

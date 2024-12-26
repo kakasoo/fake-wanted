@@ -9,7 +9,6 @@ import { MyConfiguration } from "../../MyConfiguration";
 import { ChatProvider } from "../../providers/room/ChatProvider";
 import { RoomProvider } from "../../providers/room/RoomProvider";
 import { createQueryParameter } from "../../utils/createQueryParameter";
-import { AnswerAgent } from "../answer/answer";
 import { MessageType as FillArugmentMessageType } from "../fillArugment/IMessageType";
 import { FillArgumentAgent } from "../fillArugment/fillArgument";
 import { Scribe } from "../scribe/scribe";
@@ -18,6 +17,7 @@ import { System } from "./system";
 
 export namespace RunFunctionAgent {
   export const functionCall = async (parsed: FillArugmentMessageType) => {
+    console.log(JSON.stringify(parsed, null, 2));
     const query = createQueryParameter(parsed.parameters.query ?? {});
     const url = `http://localhost:${MyConfiguration.API_PORT()}${parsed.pathname}?${query}`;
 
@@ -34,8 +34,8 @@ export namespace RunFunctionAgent {
   export const chat = (room: Awaited<ReturnType<ReturnType<typeof RoomProvider.at>>>) => async () => {
     const histories = Scribe.prompt(room, ["runFunction", "opener"]);
 
-    // answer의 시스템 프롬프트가 1번 이상 들어가는 것을 방지하기 위해 탐색
-    const systemPrompt = histories.find((el) => {
+    // 마지막이 함수 실행 결과가 담겨 있을 것이다.
+    const systemPrompt = histories.reverse().find((el) => {
       return el.role === "system" && (JSON.parse(el.content).role as IAgent.Role) === "runFunction";
     });
 
@@ -46,6 +46,13 @@ export namespace RunFunctionAgent {
       messages: [
         ...histories,
         ...(systemPrompt ? [] : [System.prompt()]), // Answer 용 시스템 프롬프트가 주입 안된 경우에 주입한다.
+        {
+          role: "user",
+          content: [
+            "Can you get the context I've been talking about so far,",
+            "and explain the results of the previous function call in as much detail as possible?",
+          ].join("\n"),
+        },
       ],
     });
 
@@ -55,41 +62,42 @@ export namespace RunFunctionAgent {
   export const answer =
     (user: IEntity) =>
     async (input: IChatting.IChatInput): Promise<IChatting.IResponse[] | null> => {
-      // 1. 다시 방의 최신 대화 내용을 불러온다.
+      // 1. 방의 최신 대화 내용을 불러온다.
       const room = await RoomProvider.at(user)({ id: input.roomId });
 
+      // 2. 이전 fillArgument를 꺼내어서 함수를 호출한다.
       const fillArgument = await FillArgumentAgent.chat(room)(true);
-
-      console.log("runFunction's fillArgument: ", JSON.stringify(fillArgument, null, 2));
       const called: unknown = await RunFunctionAgent.functionCall(fillArgument);
-      const response = await ChatProvider.create({
+
+      console.log("called: ", JSON.stringify(called));
+
+      // 3. 호출 결과를 시스템 프롬프트로 주입한다.
+      await ChatProvider.create({
         userId: user.id,
         roomId: input.roomId,
-        speaker: "assistant",
+        speaker: "system",
         message: [
           "The server called the function on behalf of LLM.",
           "Please explain to the user based on this response.",
           "The below code is result of a function response called by the server on behalf of LLM.",
+          "<RESPONSE>",
           JSON.stringify(called, null, 2),
-          "The above code is result of a function response called by the server on behalf of LLM.",
+          "</RESPONSE>",
         ].join("\n"),
-        role: null,
+        role: "runFunction",
       });
-      console.log(5, called);
 
-      const docent = await AnswerAgent.chat(room)();
-      console.log(7);
-
-      console.log(8);
-      const docentHistory = await ChatProvider.create({
+      // 응답을 보여준다.
+      const retrieved = await RoomProvider.at(user)({ id: input.roomId });
+      const answer = await RunFunctionAgent.chat(retrieved)();
+      const response = await ChatProvider.create({
         userId: user.id,
         roomId: input.roomId,
         speaker: "assistant",
-        message: JSON.stringify(docent),
+        message: JSON.stringify(answer),
         role: null,
       });
-      console.log(9);
 
-      return [response, docentHistory];
+      return [response];
     };
 }
