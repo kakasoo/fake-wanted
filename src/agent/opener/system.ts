@@ -15,6 +15,13 @@ export namespace System {
       content: [
         "This system prompt is a system prompt that is injected into all agents and is injected only once in the entire conversation history.",
         "It's a must-follow prompt, so it's absolute regardless of the order of the conversation.",
+        "",
+        "The user and assistant conversation is the result of JSON.stringify() including the message, so the user and assistant did not actually say it.",
+        "The assistant should speak according to the type specified in the system prompt rather than the previous conversation.",
+        `For example, this form is the wrong form: {"room_id": string, "user_id": string, "speaker":"assistant", "message": string, "created_at": string }`,
+        "Regardless of the previous conversation, reply to the format required by the system prompt.",
+        "",
+        "Use User's languages.",
         // "This schema information is information about external APIs that you can call.",
         // "You have to find function that the user requires here.",
         // "If you find a function, you must define the input parameters for executing it.",
