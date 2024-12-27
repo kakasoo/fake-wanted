@@ -6,7 +6,13 @@ import { IAgent } from "@kakasoo/fake-wanted-api/lib/structures/agent/IAgent";
 import { RoomProvider } from "../../providers/room/RoomProvider";
 
 export namespace Scribe {
-  export function prompt(room: Awaited<ReturnType<ReturnType<typeof RoomProvider.at>>>, roles?: IAgent.Role[]) {
+  export function prompt<T extends IAgent.Role[]>(
+    room: Awaited<ReturnType<ReturnType<typeof RoomProvider.at>>>,
+    roles?: T,
+  ): (ChatCompletionMessageParam & {
+    content: string;
+    system_role: T[number];
+  })[] {
     if (room.chattings.length === 0) {
       return [];
     }
