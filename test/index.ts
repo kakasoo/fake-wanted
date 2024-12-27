@@ -25,8 +25,7 @@ const getOptions = () =>
     command.option("--trace <boolean>", "trace detailed errors");
 
     return action(async (options) => {
-      if (typeof options.reset === "string")
-        options.reset = options.reset === "true";
+      if (typeof options.reset === "string") options.reset = options.reset === "true";
       options.reset ??= await prompt.boolean("reset")("Reset local DB");
       options.trace = options.trace !== ("false" as any);
       return options as IOptions;
@@ -61,17 +60,12 @@ async function main(): Promise<void> {
       },
     ],
     filter: (func) =>
-      (!options.include?.length ||
-        (options.include ?? []).some((str) => func.includes(str))) &&
-      (!options.exclude?.length ||
-        (options.exclude ?? []).every((str) => !func.includes(str))),
+      (!options.include?.length || (options.include ?? []).some((str) => func.includes(str))) &&
+      (!options.exclude?.length || (options.exclude ?? []).every((str) => !func.includes(str))),
     onComplete: (exec) => {
-      const trace = (str: string) =>
-        console.log(`  - ${chalk.green(exec.name)}: ${str}`);
+      const trace = (str: string) => console.log(`  - ${chalk.green(exec.name)}: ${str}`);
       if (exec.error === null) {
-        const elapsed: number =
-          new Date(exec.completed_at).getTime() -
-          new Date(exec.started_at).getTime();
+        const elapsed: number = new Date(exec.completed_at).getTime() - new Date(exec.started_at).getTime();
         trace(`${chalk.yellow(elapsed.toLocaleString())} ms`);
       } else trace(chalk.red(exec.error.name));
     },
@@ -81,9 +75,7 @@ async function main(): Promise<void> {
   await sleep_for(2500); // WAIT FOR BACKGROUND EVENTS
   await backend.close();
 
-  const exceptions: Error[] = report.executions
-    .filter((exec) => exec.error !== null)
-    .map((exec) => exec.error!);
+  const exceptions: Error[] = report.executions.filter((exec) => exec.error !== null).map((exec) => exec.error!);
   if (exceptions.length === 0) {
     console.log("Success");
     console.log("Elapsed time", report.time.toLocaleString(), `ms`);
