@@ -16,7 +16,6 @@ import { System } from "./system";
 
 export namespace RunFunctionAgent {
   export const functionCall = async (parsed: FillArugmentMessageType) => {
-    console.log(JSON.stringify(parsed, null, 2));
     const query = createQueryParameter(parsed.parameters.query ?? {});
     const url = `http://localhost:${MyConfiguration.API_PORT()}${parsed.pathname}?${query}`;
 
@@ -31,10 +30,17 @@ export namespace RunFunctionAgent {
   };
 
   export const chat = (room: Awaited<ReturnType<ReturnType<typeof RoomProvider.at>>>) => async () => {
-    const histories = Scribe.prompt(room, ["runFunction", "opener"]);
+    const histories = Scribe.prompt(room, ["runFunction", "called", "opener"]);
 
-    // 마지막이 함수 실행 결과가 담겨 있을 것이다.
-    const systemPrompt = histories.reverse().find((el) => {
+    const calledPrompt = histories.reverse().find((el) => {
+      return el.role === "system" && el.system_role === "called";
+    });
+
+    if (!calledPrompt) {
+      throw new Error("Cannot explain response of function execution. beacause of any function doesn't run.");
+    }
+
+    const systemPrompt = histories.find((el) => {
       return el.role === "system" && el.system_role === "runFunction";
     });
 
@@ -68,8 +74,6 @@ export namespace RunFunctionAgent {
       const fillArgument = await FillArgumentAgent.chat(room)(true);
       const called: unknown = await RunFunctionAgent.functionCall(fillArgument);
 
-      console.log("called: ", JSON.stringify(called));
-
       // 3. 호출 결과를 시스템 프롬프트로 주입한다.
       await ChatProvider.create({
         userId: user.id,
@@ -83,7 +87,7 @@ export namespace RunFunctionAgent {
           JSON.stringify(called, null, 2),
           "</RESPONSE>",
         ].join("\n"),
-        role: "runFunction",
+        role: "called",
       });
 
       // 응답을 보여준다.
