@@ -1,4 +1,8 @@
-import { ChatCompletionMessageParam } from "openai/resources";
+import {
+  ChatCompletionAssistantMessageParam,
+  ChatCompletionSystemMessageParam,
+  ChatCompletionUserMessageParam,
+} from "openai/resources";
 import typia from "typia";
 
 import { IAgent } from "@kakasoo/fake-wanted-api/lib/structures/agent/IAgent";
@@ -9,7 +13,13 @@ export namespace Scribe {
   export function prompt<T extends IAgent.Role[]>(
     room: Awaited<ReturnType<ReturnType<typeof RoomProvider.at>>>,
     roles?: T,
-  ): (ChatCompletionMessageParam & {
+  ): (Omit<
+    Pick<
+      ChatCompletionSystemMessageParam | ChatCompletionUserMessageParam | ChatCompletionAssistantMessageParam,
+      "role"
+    >,
+    "content"
+  > & {
     content: string;
     system_role: T[number];
   })[] {
@@ -36,27 +46,40 @@ export namespace Scribe {
         // 시스템 프롬프트가 아닌 경우는 대화 맥락이므로 전부 허용해야 한다.
         return true;
       })
-      .map((history): ChatCompletionMessageParam & { content: string; system_role: IAgent.Role } => {
-        const role = history.speaker as "user" | "assistant" | "system";
-        if (role === "user") {
-          return {
-            role: "user",
-            content: history.message,
-            system_role: null,
-          };
-        } else if (role === "system") {
-          return {
-            role: "system",
-            content: history.message,
-            system_role: typia.is<IAgent.Role>(history.role) ? history.role : null,
-          };
-        } else {
-          return {
-            role: "assistant",
-            content: history.message,
-            system_role: null,
-          };
-        }
-      });
+      .map(
+        (
+          history,
+        ): Omit<
+          Pick<
+            ChatCompletionSystemMessageParam | ChatCompletionUserMessageParam | ChatCompletionAssistantMessageParam,
+            "role"
+          >,
+          "content"
+        > & {
+          content: string;
+          system_role: IAgent.Role;
+        } => {
+          const role = history.speaker as "user" | "assistant" | "system";
+          if (role === "user") {
+            return {
+              role: "user",
+              content: history.message,
+              system_role: null,
+            };
+          } else if (role === "system") {
+            return {
+              role: "system",
+              content: history.message,
+              system_role: typia.is<IAgent.Role>(history.role) ? history.role : null,
+            };
+          } else {
+            return {
+              role: "assistant",
+              content: history.message,
+              system_role: null,
+            };
+          }
+        },
+      );
   }
 }
