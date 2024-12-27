@@ -6,6 +6,7 @@ export namespace IAgent {
     | "scribe"
     | "selectFunction"
     | "fillArgument"
+    | "called"
     | "runFunction"
     | null;
 }

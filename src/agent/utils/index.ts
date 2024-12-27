@@ -4,13 +4,19 @@ import typia from "typia";
 import { MessageType as AnswerMessageType } from "../answer/IMessageType";
 import { MessageType as FillArgumentMessageType } from "../fillArugment/IMessageType";
 import { MessageType as JudgementMessageType } from "../judgement/IMessageType";
+import { MessageType as RunFunctionMessageType } from "../runFunction/IMessageType";
 import { MessageType as SelectFunctionMessageType } from "../selectFunction/IMessageType";
 
 export namespace AgentUtil {
   export namespace Content {
     export function runFunction(input: ChatCompletion) {
       const content = input.choices.at(0)?.message.content ?? null;
-      return content;
+      const response = content === null ? null : typia.json.isParse<RunFunctionMessageType | null>(content);
+      if (response === null) {
+        throw new Error(`invalid runFunction message type: ${content}`);
+      }
+
+      return response;
     }
 
     export function fillArgument(input: ChatCompletion): FillArgumentMessageType {
