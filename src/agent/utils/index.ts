@@ -11,8 +11,17 @@ export namespace AgentUtil {
   export namespace Content {
     export function runFunction(input: ChatCompletion) {
       const content = input.choices.at(0)?.message.content ?? null;
-      const response = content === null ? null : typia.json.isParse<RunFunctionMessageType | null>(content);
+      if (content === null) {
+        throw new Error(`runFunction content is nothing.`);
+      }
+
+      const response = content === null ? null : typia.json.isParse<RunFunctionMessageType>(content);
       if (response === null) {
+        const parsed = { ...JSON.parse(content), type: "runFunction" };
+        if (typia.is<RunFunctionMessageType>(parsed)) {
+          return parsed;
+        }
+
         throw new Error(`invalid runFunction message type: ${content}`);
       }
 
@@ -21,16 +30,15 @@ export namespace AgentUtil {
 
     export function fillArgument(input: ChatCompletion): FillArgumentMessageType {
       const content = input.choices.at(0)?.message.content ?? null;
-      const response = content === null ? null : typia.json.isParse<FillArgumentMessageType | null>(content);
+      if (content === null) {
+        throw new Error(`fillArgument content is nothing.`);
+      }
+
+      const response = content === null ? null : typia.json.isParse<FillArgumentMessageType>(content);
       if (response === null) {
-        if (typeof content === "string") {
-          const parsed = JSON.parse(content);
-          if ("message" in parsed) {
-            const retry = parsed.message === null ? null : typia.json.isParse<FillArgumentMessageType | null>(content);
-            if (retry !== null) {
-              return retry;
-            }
-          }
+        const parsed = { ...JSON.parse(content), type: "fillArgument" };
+        if (typia.is<FillArgumentMessageType>(parsed)) {
+          return parsed;
         }
 
         throw new Error(`invalid fillArgument message type: ${content}`);
@@ -41,8 +49,17 @@ export namespace AgentUtil {
 
     export function selectFunction(input: ChatCompletion): SelectFunctionMessageType {
       const content = input.choices.at(0)?.message.content ?? null;
-      const response = content === null ? null : typia.json.isParse<SelectFunctionMessageType | null>(content);
+      if (content === null) {
+        throw new Error(`selectFunction content is nothing.`);
+      }
+
+      const response = content === null ? null : typia.json.isParse<SelectFunctionMessageType>(content);
       if (response === null) {
+        const parsed = { ...JSON.parse(content), type: "selectFunction" };
+        if (typia.is<SelectFunctionMessageType>(parsed)) {
+          return parsed;
+        }
+
         throw new Error(`invalid selectFunction message type: ${content}`);
       }
 
@@ -51,8 +68,17 @@ export namespace AgentUtil {
 
     export function judgement(input: ChatCompletion): JudgementMessageType {
       const content = input.choices.at(0)?.message.content ?? null;
+      if (content === null) {
+        throw new Error(`judgement content is nothing.`);
+      }
+
       const response = content === null ? null : typia.json.isParse<JudgementMessageType>(content);
       if (response === null) {
+        const parsed = { ...JSON.parse(content), type: "judgement" };
+        if (typia.is<JudgementMessageType>(parsed)) {
+          return parsed;
+        }
+
         throw new Error(`invalid judgement message type: ${content}`);
       }
 
@@ -61,8 +87,17 @@ export namespace AgentUtil {
 
     export function answer(input: ChatCompletion): AnswerMessageType {
       const content = input.choices.at(0)?.message.content ?? null;
-      const response = content === null ? null : typia.json.isParse<AnswerMessageType | null>(content);
+      if (content === null) {
+        throw new Error(`answer content is nothing.`);
+      }
+
+      const response = content === null ? null : typia.json.isParse<AnswerMessageType>(content);
       if (response === null) {
+        const parsed = { ...JSON.parse(content), type: "answer" };
+        if (typia.is<AnswerMessageType>(parsed)) {
+          return parsed;
+        }
+
         const message = JSON.parse(content ?? "{}").message;
         if (message) {
           // 타입이 빠졌을 뿐, 실제로는 메세지가 있는 경우 강제로 chat 타입으로 변환한다.

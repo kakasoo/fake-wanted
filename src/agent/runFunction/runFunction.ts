@@ -33,7 +33,7 @@ export namespace RunFunctionAgent {
   export const chat = (room: Awaited<ReturnType<ReturnType<typeof RoomProvider.at>>>) => async () => {
     const histories = Scribe.prompt(room, ["runFunction", "called", "opener"]);
 
-    const calledPrompt = histories.reverse().find((el) => {
+    const calledPrompt = histories.toReversed().find((el) => {
       return el.role === "system" && el.system_role === "called";
     });
 
