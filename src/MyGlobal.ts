@@ -51,6 +51,8 @@ interface IEnvironments {
   POSTGRES_USERNAME: string;
   POSTGRES_USERNAME_READONLY: string;
   POSTGRES_PASSWORD: string;
+
+  OPEN_AI_KEY: string;
 }
 
 interface IMode {

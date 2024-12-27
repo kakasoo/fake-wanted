@@ -3,6 +3,7 @@ import OpenAI from "openai";
 import { IChatting } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IChatting";
 import { IEntity } from "@kakasoo/fake-wanted-api/lib/structures/common/IEntity";
 
+import { MyGlobal } from "../../MyGlobal";
 import { ChatProvider } from "../../providers/room/ChatProvider";
 import { RoomProvider } from "../../providers/room/RoomProvider";
 import { Scribe } from "../scribe/scribe";
@@ -18,7 +19,7 @@ export namespace SelectFunctionAgent {
     });
 
     const chatCompletion = await new OpenAI({
-      apiKey: process.env.OPEN_AI_KEY,
+      apiKey: MyGlobal.env.OPEN_AI_KEY,
     }).chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
