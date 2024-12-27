@@ -64,7 +64,7 @@ export namespace FillArgumentAgent {
         userId: user.id,
         roomId: input.roomId,
         speaker: "assistant",
-        message: JSON.stringify(answer),
+        message: JSON.stringify(answer, null, 2),
         role: null,
       });
 
