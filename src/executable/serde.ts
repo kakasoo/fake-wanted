@@ -1,10 +1,5 @@
 import { HttpMigration, OpenApi, OpenApiTypeChecker } from "@samchon/openapi";
-import {
-  HttpOpenAi,
-  IHttpOpenAiApplication,
-  ISwaggerMigrateApplication,
-  OpenAiTypeChecker,
-} from "@wrtnio/schema";
+import { HttpOpenAi, IHttpOpenAiApplication, ISwaggerMigrateApplication, OpenAiTypeChecker } from "@wrtnio/schema";
 import cp from "child_process";
 import fs from "fs";
 import typia from "typia";
@@ -18,13 +13,7 @@ const assertDocumentDescription = (document: OpenApi.IDocument): void => {
   const violates: Set<string> = new Set();
   for (const [path, collection] of Object.entries(document.paths ?? {}))
     for (const [method, operation] of Object.entries(collection))
-      if (
-        method === "get" ||
-        method === "post" ||
-        method === "put" ||
-        method === "patch" ||
-        method === "delete"
-      )
+      if (method === "get" || method === "post" || method === "put" || method === "patch" || method === "delete")
         visitOperationDescription({
           components,
           visited,
@@ -49,11 +38,7 @@ const visitOperationDescription = (props: {
   operation: OpenApi.IOperation;
 }): void => {
   const accessor: string = `${props.method.toUpperCase()} ${props.path}`;
-  if (
-    props.operation.summary === undefined &&
-    props.operation.description === undefined
-  )
-    props.violates.add(accessor);
+  if (props.operation.summary === undefined && props.operation.description === undefined) props.violates.add(accessor);
 
   for (const param of props.operation.parameters ?? [])
     if (param.schema)
@@ -66,19 +51,17 @@ const visitOperationDescription = (props: {
         schema: param.schema,
       });
   if (props.operation.requestBody)
-    Object.values(props.operation.requestBody.content ?? {}).forEach(
-      (media) => {
-        if (media?.schema)
-          visitSchemaDescription({
-            top: false,
-            components: props.components,
-            visited: props.visited,
-            violates: props.violates,
-            accessor: `${accessor} Request Body`,
-            schema: media.schema,
-          });
-      },
-    );
+    Object.values(props.operation.requestBody.content ?? {}).forEach((media) => {
+      if (media?.schema)
+        visitSchemaDescription({
+          top: false,
+          components: props.components,
+          visited: props.visited,
+          violates: props.violates,
+          accessor: `${accessor} Request Body`,
+          schema: media.schema,
+        });
+    });
   Object.values(props.operation.responses ?? {}).map((response) => {
     Object.values(response.content ?? {}).forEach((media) => {
       if (media?.schema)
@@ -105,11 +88,7 @@ const visitSchemaDescription = (props: {
   // GATHER ACCESSORS
   if (props.visited.has(props.schema)) return;
   props.visited.add(props.schema);
-  if (
-    props.top === true &&
-    props.schema.title === undefined &&
-    props.schema.description === undefined
-  )
+  if (props.top === true && props.schema.title === undefined && props.schema.description === undefined)
     props.violates.add(props.accessor);
 
   if (OpenApiTypeChecker.isReference(props.schema))
@@ -119,10 +98,7 @@ const visitSchemaDescription = (props: {
       visited: props.visited,
       violates: props.violates,
       accessor: props.schema.$ref.split("/").at(-1) ?? "",
-      schema:
-        props.components?.schemas?.[
-          props.schema.$ref.split("/").at(-1) ?? ""
-        ] ?? {},
+      schema: props.components?.schemas?.[props.schema.$ref.split("/").at(-1) ?? ""] ?? {},
     });
   else if (OpenApiTypeChecker.isArray(props.schema))
     visitSchemaDescription({
@@ -144,10 +120,7 @@ const visitSchemaDescription = (props: {
         schema: item,
       }),
     );
-    if (
-      typeof props.schema.additionalItems === "object" &&
-      props.schema.additionalItems !== null
-    )
+    if (typeof props.schema.additionalItems === "object" && props.schema.additionalItems !== null)
       visitSchemaDescription({
         top: false,
         components: props.components,
@@ -174,15 +147,10 @@ const visitSchemaDescription = (props: {
         components: props.components,
         visited: props.visited,
         violates: props.violates,
-        accessor: Escaper.variable(key)
-          ? `${props.accessor}.${key}`
-          : `${props.accessor}[${JSON.stringify(key)}]`,
+        accessor: Escaper.variable(key) ? `${props.accessor}.${key}` : `${props.accessor}[${JSON.stringify(key)}]`,
         schema,
       });
-    if (
-      typeof props.schema.additionalProperties === "object" &&
-      props.schema.additionalProperties !== null
-    )
+    if (typeof props.schema.additionalProperties === "object" && props.schema.additionalProperties !== null)
       visitSchemaDescription({
         top: true,
         components: props.components,
@@ -196,10 +164,9 @@ const visitSchemaDescription = (props: {
 
 const generateOpenAiFunctionCallingSchemas = async (
   location: string,
-  document: OpenApi.IDocument,
+  document: OpenApi.IDocument, // swagger
 ): Promise<void> => {
-  const migrate: ISwaggerMigrateApplication =
-    HttpMigration.application(document);
+  const migrate: ISwaggerMigrateApplication = HttpMigration.application(document);
 
   for (const keyword of [false, true]) {
     const openai: IHttpOpenAiApplication = HttpOpenAi.application({
@@ -207,9 +174,7 @@ const generateOpenAiFunctionCallingSchemas = async (
       options: {
         keyword,
         separate: (s) =>
-          OpenAiTypeChecker.isString(s) &&
-          (s["x-wrtn-secret-key"] !== undefined ||
-            s.contentMediaType !== undefined),
+          OpenAiTypeChecker.isString(s) && (s["x-wrtn-secret-key"] !== undefined || s.contentMediaType !== undefined),
       },
     });
     if (openai.errors.length > 0) {
@@ -222,22 +187,13 @@ const generateOpenAiFunctionCallingSchemas = async (
       "utf8",
     );
   }
-  await fs.promises.writeFile(
-    `${location}/migrate.json`,
-    JSON.stringify(migrate),
-    "utf8",
-  );
-  await fs.promises.writeFile(
-    `${location}/version.json`,
-    JSON.stringify({ version: document.info?.version }),
-    "utf8",
-  );
+  await fs.promises.writeFile(`${location}/migrate.json`, JSON.stringify(migrate), "utf8");
+  await fs.promises.writeFile(`${location}/version.json`, JSON.stringify({ version: document.info?.version }), "utf8");
 };
 
 const main = async (): Promise<void> => {
   const location: string = `${MyConfiguration.ROOT}/packages/api`;
-  if (false === fs.existsSync(`${location}/swagger.json`))
-    cp.execSync("npx nestia swagger", { stdio: "inherit" });
+  if (false === fs.existsSync(`${location}/swagger.json`)) cp.execSync("npx nestia swagger", { stdio: "inherit" });
 
   const document: OpenApi.IDocument = typia.assert<OpenApi.IDocument>(
     JSON.parse(await fs.promises.readFile(`${location}/swagger.json`, "utf-8")),

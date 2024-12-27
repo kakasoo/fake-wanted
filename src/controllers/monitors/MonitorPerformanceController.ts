@@ -1,6 +1,7 @@
-import { IPerformance } from "@kakasoo/fake-wanted-api/lib/structures/monitors/IPerformance";
-import core from "@nestia/core";
+import core, { HumanRoute } from "@nestia/core";
 import { Controller } from "@nestjs/common";
+
+import { IPerformance } from "@kakasoo/fake-wanted-api/lib/structures/monitors/IPerformance";
 
 @Controller("monitors/performance")
 export class MonitorPerformanceController {
@@ -14,6 +15,7 @@ export class MonitorPerformanceController {
    *
    * @author Samchon
    */
+  @HumanRoute()
   @core.TypedRoute.Get()
   public async get(): Promise<IPerformance> {
     return {

@@ -10,7 +10,7 @@ export namespace System {
         "",
         "You have to give a Chat-type response.",
         `Your response format is always: "{ "type": "chat", "message": string }"`,
-        "This type of response is shown directly to the user.",
+        'This type of response is shown directly to the user, but Only "message" property.',
       ].join("\n"),
     } satisfies ChatCompletionSystemMessageParam;
   }

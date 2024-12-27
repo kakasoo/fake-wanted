@@ -1,7 +1,6 @@
 import axios from "axios";
 import OpenAI from "openai";
 
-import { IAgent } from "@kakasoo/fake-wanted-api/lib/structures/agent/IAgent";
 import { IChatting } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IChatting";
 import { IEntity } from "@kakasoo/fake-wanted-api/lib/structures/common/IEntity";
 
@@ -36,7 +35,7 @@ export namespace RunFunctionAgent {
 
     // 마지막이 함수 실행 결과가 담겨 있을 것이다.
     const systemPrompt = histories.reverse().find((el) => {
-      return el.role === "system" && (JSON.parse(el.content).role as IAgent.Role) === "runFunction";
+      return el.role === "system" && el.system_role === "runFunction";
     });
 
     const chatCompletion = await new OpenAI({

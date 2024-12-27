@@ -21,7 +21,7 @@ export namespace System {
         "'fillArgument'\'s 'parameters' is JSON, and each JSON object should be mapped under the names 'query', 'body', and 'param'.",
         'for example, { "parameters": { "body": { "query": "EXAMPLE_TEXT" } } }',
         "Be careful that neither query, body, or parameter is a string or a number.",
-        "This type of response is shown directly to the user.",
+        'This type of response is shown directly to the user, but Only "message" property.',
         "'message' properties mean asking the user one last time if they can fill in these functional factors and call them.",
         "Because users can only see 'message' properties, the 'message' must be fully described for the parameter values.",
         "If the user approves it, it will actually run in 'runFunction'.",

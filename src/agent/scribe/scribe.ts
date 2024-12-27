@@ -30,42 +30,26 @@ export namespace Scribe {
         // 시스템 프롬프트가 아닌 경우는 대화 맥락이므로 전부 허용해야 한다.
         return true;
       })
-      .map((history): ChatCompletionMessageParam & { content: string } => {
+      .map((history): ChatCompletionMessageParam & { content: string; system_role: IAgent.Role } => {
         const role = history.speaker as "user" | "assistant" | "system";
         if (role === "user") {
           return {
             role: "user",
-            content: JSON.stringify({
-              room_id: history.room_id,
-              user_id: history.user_id,
-              speaker: history.speaker,
-              message: history.message,
-              created_at: history.created_at,
-            }),
-          } satisfies ChatCompletionMessageParam;
+            content: history.message,
+            system_role: null,
+          };
         } else if (role === "system") {
           return {
             role: "system",
-            content: JSON.stringify({
-              room_id: history.room_id,
-              user_id: history.user_id,
-              speaker: history.speaker,
-              role: history.role,
-              message: history.message,
-              created_at: history.created_at,
-            }),
-          } satisfies ChatCompletionMessageParam;
+            content: history.message,
+            system_role: typia.is<IAgent.Role>(history.role) ? history.role : null,
+          };
         } else {
           return {
             role: "assistant",
-            content: JSON.stringify({
-              room_id: history.room_id,
-              user_id: history.user_id,
-              speaker: history.speaker,
-              message: history.message,
-              created_at: history.created_at,
-            }),
-          } satisfies ChatCompletionMessageParam;
+            content: history.message,
+            system_role: null,
+          };
         }
       });
   }

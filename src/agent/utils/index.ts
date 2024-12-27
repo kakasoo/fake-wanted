@@ -17,6 +17,16 @@ export namespace AgentUtil {
       const content = input.choices.at(0)?.message.content ?? null;
       const response = content === null ? null : typia.json.isParse<FillArgumentMessageType | null>(content);
       if (response === null) {
+        if (typeof content === "string") {
+          const parsed = JSON.parse(content);
+          if ("message" in parsed) {
+            const retry = parsed.message === null ? null : typia.json.isParse<FillArgumentMessageType | null>(content);
+            if (retry !== null) {
+              return retry;
+            }
+          }
+        }
+
         throw new Error(`invalid fillArgument message type: ${content}`);
       }
 

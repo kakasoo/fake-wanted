@@ -1,6 +1,5 @@
 import OpenAI from "openai";
 
-import { IAgent } from "@kakasoo/fake-wanted-api/lib/structures/agent/IAgent";
 import { IChatting } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IChatting";
 import { IEntity } from "@kakasoo/fake-wanted-api/lib/structures/common/IEntity";
 
@@ -17,11 +16,11 @@ export namespace FillArgumentAgent {
       const histories = Scribe.prompt(room, ["fillArgument", "opener"]);
 
       const systemPrompt = histories.find((el) => {
-        return el.role === "system" && (JSON.parse(el.content).role as IAgent.Role) === "fillArgument";
+        return el.role === "system" && el.system_role === "fillArgument";
       });
 
       const selectedFunctionHistories = histories.filter(
-        (el) => el.role === "system" && (JSON.parse(el.content).role as IAgent.Role) === "selectFunction",
+        (el) => el.role === "system" && el.system_role === "selectFunction",
       );
 
       const chatCompletion = await new OpenAI({

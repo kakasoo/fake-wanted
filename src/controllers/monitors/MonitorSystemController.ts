@@ -1,6 +1,7 @@
-import { ISystem } from "@kakasoo/fake-wanted-api/lib/structures/monitors/ISystem";
-import core from "@nestia/core";
+import core, { HumanRoute } from "@nestia/core";
 import { Controller } from "@nestjs/common";
+
+import { ISystem } from "@kakasoo/fake-wanted-api/lib/structures/monitors/ISystem";
 
 import { SystemProvider } from "../../providers/monitors/SystemProvider";
 import { DateUtil } from "../../utils/DateUtil";
@@ -17,6 +18,7 @@ export class MonitorSystemController {
    *
    * @author Samchon
    */
+  @HumanRoute()
   @core.TypedRoute.Get()
   public async get(): Promise<ISystem> {
     return {
@@ -31,6 +33,7 @@ export class MonitorSystemController {
   /**
    * @internal
    */
+  @HumanRoute()
   @core.TypedRoute.Get("internal_server_error")
   public async internal_server_error(): Promise<void> {
     throw new Error("The manual 500 error for the testing.");
@@ -39,6 +42,7 @@ export class MonitorSystemController {
   /**
    * @internal
    */
+  @HumanRoute()
   @core.TypedRoute.Get("uncaught_exception")
   public uncaught_exception(): void {
     new Promise(() => {
