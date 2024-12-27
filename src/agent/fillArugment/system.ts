@@ -3,7 +3,9 @@ import { ChatCompletionMessageParam, ChatCompletionSystemMessageParam } from "op
 import { System as SelectFunctionSystem } from "../selectFunction/system";
 
 export namespace System {
-  export function prompt(selectedFunctionHistories: (ChatCompletionMessageParam & { content: string })[]) {
+  export function prompt(
+    selectedFunctionHistories: (Omit<ChatCompletionMessageParam, "content"> & { content: string })[],
+  ) {
     const contents = selectedFunctionHistories.map((el) => JSON.parse(el.content));
 
     return {
