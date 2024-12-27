@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 
+import { IAgent } from "@kakasoo/fake-wanted-api/lib/structures/agent/IAgent";
 import { IChatting } from "@kakasoo/fake-wanted-api/lib/structures/chatting/IChatting";
 import { IEntity } from "@kakasoo/fake-wanted-api/lib/structures/common/IEntity";
 
@@ -14,7 +15,12 @@ export namespace FillArgumentAgent {
   export const chat =
     (room: Awaited<ReturnType<ReturnType<typeof RoomProvider.at>>>) =>
     async (runFunction: boolean = false) => {
-      const histories = Scribe.prompt(room, ["fillArgument", "selectFunction", "opener"]);
+      const types: IAgent.Role[] = ["fillArgument", "selectFunction", "opener"];
+      const histories = Scribe.prompt(room, types);
+
+      if (histories.some((el) => !types.includes(el.system_role))) {
+        throw new Error("Invalid system_role_type injected!");
+      }
 
       const systemPrompt = histories.find((el) => {
         return el.role === "system" && el.system_role === "fillArgument";
