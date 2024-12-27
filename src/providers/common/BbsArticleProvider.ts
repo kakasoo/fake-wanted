@@ -1,7 +1,8 @@
-import { IBbsArticle } from "@kakasoo/fake-wanted-api/lib/structures/common/IBbsArticle";
-import { IPage } from "@kakasoo/fake-wanted-api/lib/structures/common/IPage";
 import { Prisma } from "@prisma/client";
 import { v4 } from "uuid";
+
+import { IBbsArticle } from "@kakasoo/fake-wanted-api/lib/structures/common/IBbsArticle";
+import { IPage } from "@kakasoo/fake-wanted-api/lib/structures/common/IPage";
 
 import { MyGlobal } from "../../MyGlobal";
 import { PaginationUtil } from "../../utils/PaginationUtil";
@@ -10,9 +11,7 @@ import { BbsArticleSnapshotProvider } from "./BbsArticleSnapshotProvider";
 
 export namespace BbsArticleProvider {
   export namespace json {
-    export const transform = (
-      input: Prisma.bbs_articlesGetPayload<ReturnType<typeof select>>,
-    ): IBbsArticle => ({
+    export const transform = (input: Prisma.bbs_articlesGetPayload<ReturnType<typeof select>>): IBbsArticle => ({
       id: input.id,
       snapshots: input.snapshots
         .sort((a, b) => a.created_at.getTime() - b.created_at.getTime())
@@ -29,18 +28,14 @@ export namespace BbsArticleProvider {
   }
 
   export namespace abridge {
-    export const paginate = (
-      input: IBbsArticle.IRequest,
-    ): Promise<IPage<IBbsArticle.IAbridge>> =>
+    export const paginate = (input: IBbsArticle.IRequest): Promise<IPage<IBbsArticle.IAbridge>> =>
       PaginationUtil.paginate({
         schema: MyGlobal.prisma.bbs_articles,
         payload: abridge.select,
         transform: abridge.transform,
       })({
         where: search(input.search ?? {}),
-        orderBy: input.sort?.length
-          ? PaginationUtil.orderBy(orderBy)(input.sort)
-          : [{ created_at: "desc" }],
+        orderBy: input.sort?.length ? PaginationUtil.orderBy(orderBy)(input.sort) : [{ created_at: "desc" }],
       })(input);
     export const transform = (
       input: Prisma.bbs_articlesGetPayload<ReturnType<typeof select>>,
@@ -51,9 +46,7 @@ export namespace BbsArticleProvider {
       format: input.mv_last!.snapshot.format as IBbsArticle.Format,
       created_at: input.created_at.toISOString(),
       updated_at: input.mv_last!.snapshot.created_at.toISOString(),
-      files: input.mv_last!.snapshot.to_files.map((p) =>
-        AttachmentFileProvider.json.transform(p.file),
-      ),
+      files: input.mv_last!.snapshot.to_files.map((p) => AttachmentFileProvider.json.transform(p.file)),
     });
     export const select = () =>
       Prisma.validator<Prisma.bbs_articlesFindManyArgs>()({
@@ -76,18 +69,14 @@ export namespace BbsArticleProvider {
   }
 
   export namespace summarize {
-    export const paginate = (
-      input: IBbsArticle.IRequest,
-    ): Promise<IPage<IBbsArticle.ISummary>> =>
+    export const paginate = (input: IBbsArticle.IRequest): Promise<IPage<IBbsArticle.ISummary>> =>
       PaginationUtil.paginate({
         schema: MyGlobal.prisma.bbs_articles,
         payload: summarize.select,
         transform: summarize.transform,
       })({
         where: search(input.search ?? {}),
-        orderBy: input.sort?.length
-          ? PaginationUtil.orderBy(orderBy)(input.sort)
-          : [{ created_at: "desc" }],
+        orderBy: input.sort?.length ? PaginationUtil.orderBy(orderBy)(input.sort) : [{ created_at: "desc" }],
       })(input);
     export const transform = (
       input: Prisma.bbs_articlesGetPayload<ReturnType<typeof select>>,
@@ -188,10 +177,7 @@ export namespace BbsArticleProvider {
         : []),
     ]);
 
-  export const orderBy = (
-    key: IBbsArticle.IRequest.SortableColumns,
-    value: "asc" | "desc",
-  ) =>
+  export const orderBy = (key: IBbsArticle.IRequest.SortableColumns, value: "asc" | "desc") =>
     Prisma.validator<Prisma.bbs_articlesOrderByWithRelationInput>()(
       key === "title"
         ? { mv_last: { snapshot: { title: value } } }
@@ -202,10 +188,7 @@ export namespace BbsArticleProvider {
     );
 
   export const collect =
-    <
-      Input extends IBbsArticle.IStore,
-      Snapshot extends Prisma.bbs_article_snapshotsCreateWithoutArticleInput,
-    >(
+    <Input extends IBbsArticle.IStore, Snapshot extends Prisma.bbs_article_snapshotsCreateWithoutArticleInput>(
       snapshotFactory: (input: Input) => Snapshot,
     ) =>
     (input: Input) => {

@@ -1,5 +1,6 @@
-import { IRecordMerge } from "@kakasoo/fake-wanted-api/lib/structures/common/IRecordMerge";
 import { Prisma } from "@prisma/client";
+
+import { IRecordMerge } from "@kakasoo/fake-wanted-api/lib/structures/common/IRecordMerge";
 
 import { MyGlobal } from "../../MyGlobal";
 import { EntityUtil } from "../../utils/EntityUtil";
@@ -7,16 +8,12 @@ import { ErrorProvider } from "./ErrorProvider";
 
 export namespace EntityMergeProvider {
   export const merge =
-    (
-      table: Prisma.ModelName,
-      finder?: (input: IRecordMerge) => Promise<number>,
-    ) =>
+    (table: Prisma.ModelName, finder?: (input: IRecordMerge) => Promise<number>) =>
     async (input: IRecordMerge): Promise<void> => {
       // VALIDATE TABLE
-      const primary: Prisma.DMMF.Field | undefined =
-        Prisma.dmmf.datamodel.models
-          .find((model) => model.name === table)
-          ?.fields.find((field) => field.isId === true);
+      const primary: Prisma.DMMF.Field | undefined = Prisma.dmmf.datamodel.models
+        .find((model) => model.name === table)
+        ?.fields.find((field) => field.isId === true);
       if (primary === undefined) throw ErrorProvider.internal("Invalid table.");
 
       // FIND MATCHED RECORDS

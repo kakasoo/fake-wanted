@@ -1,7 +1,8 @@
-import { ISystem } from "@kakasoo/fake-wanted-api/lib/structures/monitors/ISystem";
 import fs from "fs";
 import git from "git-last-commit";
 import { Singleton, randint } from "tstl";
+
+import { ISystem } from "@kakasoo/fake-wanted-api/lib/structures/monitors/ISystem";
 
 import { MyConfiguration } from "../../MyConfiguration";
 import { DateUtil } from "../../utils/DateUtil";
@@ -27,27 +28,16 @@ const commit_: Singleton<Promise<ISystem.ICommit>> = new Singleton(
         else
           resolve({
             ...commit,
-            authored_at: DateUtil.toString(
-              new Date(Number(commit.authoredOn) * 1000),
-              true,
-            ),
-            commited_at: DateUtil.toString(
-              new Date(Number(commit.committedOn) * 1000),
-              true,
-            ),
+            authored_at: DateUtil.toString(new Date(Number(commit.authoredOn) * 1000), true),
+            commited_at: DateUtil.toString(new Date(Number(commit.committedOn) * 1000), true),
           });
       });
     }),
 );
-const package_: Singleton<Promise<ISystem.IPackage>> = new Singleton(
-  async () => {
-    const content: string = await fs.promises.readFile(
-      `${MyConfiguration.ROOT}/package.json`,
-      "utf8",
-    );
-    return JSON.parse(content);
-  },
-);
+const package_: Singleton<Promise<ISystem.IPackage>> = new Singleton(async () => {
+  const content: string = await fs.promises.readFile(`${MyConfiguration.ROOT}/package.json`, "utf8");
+  return JSON.parse(content);
+});
 
 commit_.get().catch(() => {});
 package_.get().catch(() => {});

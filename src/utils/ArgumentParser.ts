@@ -9,11 +9,7 @@ export namespace ArgumentParser {
   ) => Promise<T>;
 
   export interface Prompt {
-    select: (
-      name: string,
-    ) => (
-      message: string,
-    ) => <Choice extends string>(choices: Choice[]) => Promise<Choice>;
+    select: (name: string) => (message: string) => <Choice extends string>(choices: Choice[]) => Promise<Choice>;
     boolean: (name: string) => (message: string) => Promise<boolean>;
     number: (name: string) => (message: string) => Promise<number>;
   }
@@ -71,11 +67,7 @@ export namespace ArgumentParser {
 
     const output: T | Error = await (async () => {
       try {
-        return await inquiry(
-          commander.program,
-          { select, boolean, number },
-          action,
-        );
+        return await inquiry(commander.program, { select, boolean, number }, action);
       } catch (error) {
         return error as Error;
       }

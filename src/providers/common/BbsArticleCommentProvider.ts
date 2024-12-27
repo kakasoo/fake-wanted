@@ -1,8 +1,9 @@
+import { Prisma } from "@prisma/client";
+import { v4 } from "uuid";
+
 import { IBbsArticle } from "@kakasoo/fake-wanted-api/lib/structures/common/IBbsArticle";
 import { IBbsArticleComment } from "@kakasoo/fake-wanted-api/lib/structures/common/IBbsArticleComment";
 import { IPage } from "@kakasoo/fake-wanted-api/lib/structures/common/IPage";
-import { Prisma } from "@prisma/client";
-import { v4 } from "uuid";
 
 import { MyGlobal } from "../../MyGlobal";
 import { PaginationUtil } from "../../utils/PaginationUtil";
@@ -28,23 +29,17 @@ export namespace BbsArticleCommentProvider {
       });
   }
 
-  export const paginate = (
-    input: IBbsArticleComment.IRequest,
-  ): Promise<IPage<IBbsArticleComment>> =>
+  export const paginate = (input: IBbsArticleComment.IRequest): Promise<IPage<IBbsArticleComment>> =>
     PaginationUtil.paginate({
       schema: MyGlobal.prisma.bbs_article_comments,
       payload: json.select,
       transform: json.transform,
     })({
       where: search(input.search ?? {}),
-      orderBy: input.sort?.length
-        ? PaginationUtil.orderBy(orderBy)(input.sort)
-        : [{ created_at: "asc" }],
+      orderBy: input.sort?.length ? PaginationUtil.orderBy(orderBy)(input.sort) : [{ created_at: "asc" }],
     })(input);
 
-  export const search = (
-    input: IBbsArticleComment.IRequest.ISearch | undefined,
-  ) =>
+  export const search = (input: IBbsArticleComment.IRequest.ISearch | undefined) =>
     Prisma.validator<Prisma.bbs_article_commentsWhereInput["AND"]>()(
       input?.body?.length
         ? [
@@ -61,10 +56,7 @@ export namespace BbsArticleCommentProvider {
         : [],
     );
 
-  export const orderBy = (
-    _key: IBbsArticleComment.IRequest.SortableColumns,
-    value: "asc" | "desc",
-  ) =>
+  export const orderBy = (_key: IBbsArticleComment.IRequest.SortableColumns, value: "asc" | "desc") =>
     Prisma.validator<Prisma.bbs_article_commentsOrderByWithRelationInput>()({
       created_at: value,
     });
@@ -72,8 +64,7 @@ export namespace BbsArticleCommentProvider {
   export const collect =
     <
       Input extends IBbsArticleComment.IStore,
-      Snapshot extends
-        Prisma.bbs_article_comment_snapshotsCreateWithoutCommentInput,
+      Snapshot extends Prisma.bbs_article_comment_snapshotsCreateWithoutCommentInput,
     >(
       snapshotFactory: (input: Input) => Snapshot,
     ) =>

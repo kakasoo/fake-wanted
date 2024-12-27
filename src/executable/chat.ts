@@ -68,6 +68,6 @@ main().catch(async (err) => {
   if (user !== null) {
     const code = RandomGenerator.alphaNumeric(4);
     const room = await RoomProvider.at(user)({ id: roomId });
-    writeFileSync(path.join(__dirname, `../../test/case/${code}.json`), JSON.stringify(room));
+    writeFileSync(path.join(__dirname, `../../test/error-case/${code}.json`), JSON.stringify(room));
   }
 });

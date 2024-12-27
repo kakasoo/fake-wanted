@@ -5,10 +5,6 @@ import { MonitorPerformanceController } from "./MonitorPerformanceController";
 import { MonitorSystemController } from "./MonitorSystemController";
 
 @Module({
-  controllers: [
-    MonitorHealthController,
-    MonitorPerformanceController,
-    MonitorSystemController,
-  ],
+  controllers: [MonitorHealthController, MonitorPerformanceController, MonitorSystemController],
 })
 export class MonitorModule {}

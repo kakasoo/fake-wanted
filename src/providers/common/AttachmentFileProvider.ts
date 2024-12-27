@@ -1,6 +1,7 @@
-import { IAttachmentFile } from "@kakasoo/fake-wanted-api/lib/structures/common/IAttachmentFile";
 import { Prisma } from "@prisma/client";
 import { v4 } from "uuid";
+
+import { IAttachmentFile } from "@kakasoo/fake-wanted-api/lib/structures/common/IAttachmentFile";
 
 export namespace AttachmentFileProvider {
   export namespace json {
@@ -13,8 +14,7 @@ export namespace AttachmentFileProvider {
       url: input.url,
       created_at: input.created_at.toISOString(),
     });
-    export const select = () =>
-      Prisma.validator<Prisma.attachment_filesFindManyArgs>()({});
+    export const select = () => Prisma.validator<Prisma.attachment_filesFindManyArgs>()({});
   }
 
   export const collect = (input: IAttachmentFile.IStore) =>

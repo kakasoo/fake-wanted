@@ -27,9 +27,7 @@ import { IPage } from "./IPage";
  * @template Snapshot Snapshot content type of the article
  * @author Samchon
  */
-export interface IBbsArticle<
-  Snapshot extends IBbsArticle.ISnapshot = IBbsArticle.ISnapshot,
-> {
+export interface IBbsArticle<Snapshot extends IBbsArticle.ISnapshot = IBbsArticle.ISnapshot> {
   /**
    * Primary Key.
    */
@@ -74,9 +72,7 @@ export namespace IBbsArticle {
 
   export interface IRequest<
     Search extends IRequest.ISearch = IRequest.ISearch,
-    Sortable extends
-      | IRequest.SortableColumns
-      | string = IRequest.SortableColumns,
+    Sortable extends IRequest.SortableColumns | string = IRequest.SortableColumns,
   > extends IPage.IRequest {
     /**
      * Search condition.

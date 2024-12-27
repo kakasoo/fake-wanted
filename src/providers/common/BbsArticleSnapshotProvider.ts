@@ -1,7 +1,8 @@
-import { IBbsArticle } from "@kakasoo/fake-wanted-api/lib/structures/common/IBbsArticle";
-import { IEntity } from "@kakasoo/fake-wanted-api/lib/structures/common/IEntity";
 import { Prisma } from "@prisma/client";
 import { v4 } from "uuid";
+
+import { IBbsArticle } from "@kakasoo/fake-wanted-api/lib/structures/common/IBbsArticle";
+import { IEntity } from "@kakasoo/fake-wanted-api/lib/structures/common/IEntity";
 
 import { MyGlobal } from "../../MyGlobal";
 import { AttachmentFileProvider } from "./AttachmentFileProvider";

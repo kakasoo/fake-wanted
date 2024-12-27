@@ -18,9 +18,7 @@ import { IPage } from "./IPage";
  *
  * @author Samchon
  */
-export interface IBbsArticleComment<
-  Snapshot extends IBbsArticleComment.ISnapshot = IBbsArticleComment.ISnapshot,
-> {
+export interface IBbsArticleComment<Snapshot extends IBbsArticleComment.ISnapshot = IBbsArticleComment.ISnapshot> {
   /**
    * Primary Key.
    */

@@ -7,20 +7,14 @@ export namespace DateUtil {
   export const MONTH = 30 * DAY;
 
   export function toString(date: Date, hms: boolean = false): string {
-    const ymd: string = [
-      date.getFullYear(),
-      date.getMonth() + 1,
-      date.getDate(),
-    ]
+    const ymd: string = [date.getFullYear(), date.getMonth() + 1, date.getDate()]
       .map((value) => _To_cipher_string(value))
       .join("-");
     if (hms === false) return ymd;
 
     return (
       `${ymd} ` +
-      [date.getHours(), date.getMinutes(), date.getSeconds()]
-        .map((value) => _To_cipher_string(value))
-        .join(":")
+      [date.getHours(), date.getMinutes(), date.getSeconds()].map((value) => _To_cipher_string(value)).join(":")
     );
   }
 
@@ -78,8 +72,7 @@ export namespace DateUtil {
 
   export function lastDate(year: number, month: number): number {
     // LEAP MONTH
-    if (month == 1 && year % 4 == 0 && !(year % 100 == 0 && year % 400 != 0))
-      return 29;
+    if (month == 1 && year % 4 == 0 && !(year % 100 == 0 && year % 400 != 0)) return 29;
     else return LAST_DATES[month];
   }
 
@@ -93,8 +86,7 @@ export namespace DateUtil {
   export function addMonths(date: Date, value: number): Date {
     date = new Date(date);
 
-    const year: number =
-      date.getFullYear() + Math.floor((date.getMonth() + value) / 12);
+    const year: number = date.getFullYear() + Math.floor((date.getMonth() + value) / 12);
     const month: number = (date.getMonth() + value) % 12;
     const last: number = lastDate(year, month - 1);
 

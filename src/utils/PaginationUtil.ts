@@ -1,5 +1,6 @@
-import { IPage } from "@kakasoo/fake-wanted-api/lib/structures/common/IPage";
 import { ArrayUtil } from "@nestia/e2e";
+
+import { IPage } from "@kakasoo/fake-wanted-api/lib/structures/common/IPage";
 
 export namespace PaginationUtil {
   export interface Transformer<Input extends object, Output extends object> {
@@ -42,18 +43,14 @@ export namespace PaginationUtil {
 
   export const paginate =
     <T extends IProps<any, any, any, any, any>>(props: T) =>
-    (spec: {
-      where: IProps.DeduceWhere<T>;
-      orderBy: IProps.DeduceOrderBy<T>[];
-    }) =>
+    (spec: { where: IProps.DeduceWhere<T>; orderBy: IProps.DeduceOrderBy<T>[] }) =>
     async (input: IPage.IRequest): Promise<IPage<IProps.DeduceOutput<T>>> => {
       input.limit ??= 100;
 
       const records: number = await props.schema.count({
         where: spec.where,
       });
-      const pages: number =
-        input.limit !== 0 ? Math.ceil(records / input.limit) : 1;
+      const pages: number = input.limit !== 0 ? Math.ceil(records / input.limit) : 1;
       input.page = input.page ? Math.max(1, Math.min(input.page, pages)) : 1;
 
       const data: IProps.DeduceRaw<T>[] = await props.schema.findMany({
@@ -64,9 +61,7 @@ export namespace PaginationUtil {
         orderBy: spec.orderBy,
       });
       return {
-        data: await ArrayUtil.asyncMap(data)(async (elem) =>
-          props.transform(elem),
-        ),
+        data: await ArrayUtil.asyncMap(data)(async (elem) => props.transform(elem)),
         pagination: {
           records,
           pages,
@@ -82,11 +77,6 @@ export namespace PaginationUtil {
     ) =>
     (columns: IPage.Sort<Column>): Output[] =>
       columns
-        .map((col) =>
-          transform(
-            col.substring(1) as Column,
-            col[0] === "+" ? "asc" : "desc",
-          ),
-        )
+        .map((col) => transform(col.substring(1) as Column, col[0] === "+" ? "asc" : "desc"))
         .filter((elem) => elem !== null) as Output[];
 }

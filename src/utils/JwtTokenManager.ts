@@ -26,16 +26,10 @@ export namespace JwtTokenManager {
         table: props.table,
         id: props.id,
         readonly: props.readonly,
-        expired_at:
-          props.expired_at ??
-          new Date(Date.now() + EXPIRATIONS.ACCESS).toISOString(),
-        refreshable_until:
-          props.refreshable_until ??
-          new Date(Date.now() + EXPIRATIONS.REFRESH).toISOString(),
+        expired_at: props.expired_at ?? new Date(Date.now() + EXPIRATIONS.ACCESS).toISOString(),
+        refreshable_until: props.refreshable_until ?? new Date(Date.now() + EXPIRATIONS.REFRESH).toISOString(),
       };
-      const [access, refresh] = [password.access, password.refresh].map((key) =>
-        jwt.sign(asset, key),
-      );
+      const [access, refresh] = [password.access, password.refresh].map((key) => jwt.sign(asset, key));
       return {
         ...asset,
         access,

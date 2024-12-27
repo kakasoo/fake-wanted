@@ -3,12 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { MyGlobal } from "../MyGlobal";
 import { MySetupWizard } from "../setup/MySetupWizard";
 
-async function execute(
-  database: string,
-  username: string,
-  password: string,
-  script: string,
-): Promise<void> {
+async function execute(database: string, username: string, password: string, script: string): Promise<void> {
   try {
     const prisma = new PrismaClient({
       datasources: {
