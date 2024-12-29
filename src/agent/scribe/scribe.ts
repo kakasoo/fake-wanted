@@ -8,6 +8,7 @@ import typia from "typia";
 import { IAgent } from "@kakasoo/fake-wanted-api/lib/structures/agent/IAgent";
 
 import { RoomProvider } from "../../providers/room/RoomProvider";
+import { MessageType } from "../judgement/IMessageType";
 
 export namespace Scribe {
   export function prompt<T extends IAgent.Role[]>(
@@ -22,6 +23,7 @@ export namespace Scribe {
   > & {
     content: string;
     system_role: T[number];
+    type?: MessageType["type"];
   })[] {
     if (room.chattings.length === 0) {
       return [];
@@ -58,6 +60,7 @@ export namespace Scribe {
         > & {
           content: string;
           system_role: IAgent.Role;
+          type?: MessageType["type"];
         } => {
           const role = history.speaker as "user" | "assistant" | "system";
           if (role === "user") {
@@ -77,6 +80,7 @@ export namespace Scribe {
               role: "assistant",
               content: history.message,
               system_role: null,
+              type: JSON.parse(history.message).type as MessageType["type"],
             };
           }
         },

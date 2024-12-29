@@ -30,15 +30,17 @@ export namespace JudgementAgent {
       return el.role === "system" && el.system_role === "judgement";
     });
 
+    const last_message_type = histories.findLast((el) => el.role === "assistant")?.type ?? null;
+
     const chatCompletion = await new OpenAI({
       apiKey: MyGlobal.env.OPEN_AI_KEY,
     }).chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        ...histories,
         ...(systemPrompt ? [] : [System.prompt()]), // Answer 용 시스템 프롬프트가 주입 안된 경우에 주입한다.
+        ...histories,
       ],
-      tools: MessageType.functions,
+      tools: last_message_type !== null ? MessageType.Functions[last_message_type] : MessageType.functions,
       tool_choice: "required",
       parallel_tool_calls: false,
     });
@@ -61,22 +63,24 @@ export namespace JudgementAgent {
       const metadata = { userId: user.id, roomId: input.roomId };
       await ChatProvider.create({ ...metadata, speaker: "user", message: input.message, role: null });
 
-      // 3. 방 정보를 넣고 judgementAgent의 판단을 대기한다.
-      const room = await RoomProvider.at(user)({ id: input.roomId });
-      const response = await JudgementAgent.chat(room)();
+      while (true) {
+        // 3. 방 정보를 넣고 judgementAgent의 판단을 대기한다.
+        const room = await RoomProvider.at(user)({ id: input.roomId });
+        const response = await JudgementAgent.chat(room)();
+        console.log(`response of judgement: ${JSON.stringify(response)}`);
 
-      console.log(`response of judgement: ${JSON.stringify(response)}`);
-      if (response.type === "chat") {
-        // Chat인 경우 AnswerAgent의 answer로 이어지게 한다.
-        return AnswerAgent.answer(user)(input);
-      } else if (response.type === "selectFunction") {
-        return SelectFunctionAgent.answer(user)(input);
-      } else if (response.type === "fillArgument") {
-        return FillArgumentAgent.answer(user)(input);
-      } else if (response.type === "runFunction") {
-        return RunFunctionAgent.answer(user)(input);
-      } else {
-        throw new Error(`invalid judgement response type: ${JSON.stringify(response)}`);
+        if (response.type === "chat") {
+          // Chat인 경우 AnswerAgent의 answer로 이어지게 한다.
+          return AnswerAgent.answer(user)(input);
+        } else if (response.type === "selectFunction") {
+          await SelectFunctionAgent.answer(user)(input);
+        } else if (response.type === "fillArgument") {
+          await FillArgumentAgent.answer(user)(input);
+        } else if (response.type === "runFunction") {
+          await RunFunctionAgent.answer(user)(input);
+        } else {
+          throw new Error(`invalid judgement response type: ${JSON.stringify(response)}`);
+        }
       }
     };
 }

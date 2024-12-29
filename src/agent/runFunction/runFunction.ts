@@ -32,10 +32,20 @@ export namespace RunFunctionAgent {
   };
 
   export const chat = (room: Awaited<ReturnType<ReturnType<typeof RoomProvider.at>>>) => async () => {
-    const histories = Scribe.prompt(room, ["runFunction", "called", "opener"]);
+    const histories = Scribe.prompt(room, ["runFunction", "opener"]);
 
     const calledPrompt = histories.toReversed().find((el) => {
-      return el.role === "system" && el.system_role === "called";
+      const isSystemPrompt = el.role === "system" && el.system_role === "runFunction";
+      if (isSystemPrompt) {
+        return true;
+      }
+
+      const isAssistantMessage = el.role === "assistant" && el.type === "runFunction";
+      if (isAssistantMessage) {
+        return true;
+      }
+
+      return false;
     });
 
     if (!calledPrompt) {
@@ -80,29 +90,25 @@ export namespace RunFunctionAgent {
       const called: unknown = await RunFunctionAgent.functionCall(fillArgument);
 
       // 3. 호출 결과를 시스템 프롬프트로 주입한다.
-      await ChatProvider.create({
-        userId: user.id,
-        roomId: input.roomId,
-        speaker: "system",
-        message: [
-          "The server called the function on behalf of LLM.",
-          "Please explain to the user based on this response.",
-          "The below code is result of a function response called by the server on behalf of LLM.",
-          "<RESPONSE>",
-          JSON.stringify(called, null, 2),
-          "</RESPONSE>",
-        ].join("\n"),
-        role: "called",
-      });
-
-      // 응답을 보여준다.
-      const retrieved = await RoomProvider.at(user)({ id: input.roomId });
-      const answer = await RunFunctionAgent.chat(retrieved)();
       const response = await ChatProvider.create({
         userId: user.id,
         roomId: input.roomId,
         speaker: "assistant",
-        message: JSON.stringify(answer, null, 2),
+        message: JSON.stringify(
+          {
+            type: "runFunction",
+            message: [
+              "The server called the function on behalf of LLM.",
+              "Please explain to the user based on this response.",
+              "The below code is result of a function response called by the server on behalf of LLM.",
+              "<RESPONSE>",
+              JSON.stringify(called, null, 2),
+              "</RESPONSE>",
+            ].join("\n"),
+          },
+          null,
+          2,
+        ),
         role: null,
       });
 
