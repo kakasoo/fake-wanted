@@ -2,6 +2,8 @@ import { readFileSync } from "fs";
 import { ChatCompletionSystemMessageParam } from "openai/resources";
 import { join } from "path";
 
+import { MessageType } from "./IMessageType";
+
 export namespace System {
   export function getSchemaInfo(): string {
     const filepath = join(__dirname, "../../../packages/api/openai-positional.json");
@@ -23,11 +25,14 @@ export namespace System {
         "</FUNCTIONS>",
         "",
         "You have to give a SelectFunction-type response.",
-        `Your response format is always: "{ "type": "selectFunction", "functions": Array<{ method: "get" | "post" | "delete" | "put" | "patch", "pathname": string, "parameters": JSON }>, "message": string, "isSafeMethod": boolean }"`,
+        "<RESPONSE FORMAT>",
+        JSON.stringify(MessageType.functions, null, 2),
+        "</RESPONSE FORMAT>",
+        `Your response format is always: "{ "type": "selectFunction", "functions": Array<{ method: "get" | "post" | "delete" | "put" | "patch", "pathname": string, "parameters": JSON }>, "isSafeMethod": boolean }"`,
         "'selectFunction'\'s 'parameters' is JSON, and each JSON object should be mapped under the names 'query', 'body', and 'param'.",
+        "Fill information that can be filled using schema information, such as the type script interface.",
+        "",
         "The parameter information of the selectFunction does not exist to fill the value, but writes down a description of each property in advance in case of calling this function later.",
-        'This type of response is shown directly to the user, but Only "message" property.',
-        "If you have found a function, you must write a full description of the function in the message.",
         "The user will look at the description of the function and ask the assistant for help.",
         "Conversely, if you have the necessary parameters to run the function, you can use Message Properties to ask the user questions.",
       ].join("\n"),
