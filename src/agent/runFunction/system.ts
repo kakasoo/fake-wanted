@@ -16,9 +16,7 @@ export namespace System {
         "If the function call is successful by the server,",
         "the context from the user's response to the function call",
         "must be identified and the function call should be explained in detail.",
-        "The message type corresponds to 'runFunction', and the types are as follows.",
-        `Your response format is always: "{ "type": "runFunction", "method": "get" | "post" | "delete" | "put" | "patch", "pathname": string, "message": string }"`,
-        'The "message" property must explain the results of the function execution and contain instructions to the user.',
+        `Your response format is always: "{ "type": "runFunction", "method": "get" | "post" | "delete" | "put" | "patch", "pathname": string }"`,
       ].join("\n"),
     } satisfies ChatCompletionSystemMessageParam;
   }
