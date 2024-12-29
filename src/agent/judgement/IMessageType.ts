@@ -30,11 +30,12 @@ export namespace MessageType {
       .application<
         {
           /**
-           * Function that pulls out the type that can be called the next time
+           * type property is Function that pulls out the type that can be called the next time.
+           * and, reason is the reason why he chose this type.
            *
            * @title call
            */
-          call(input: { type: Transition<"chat"> }): never;
+          call(input: { type: Transition<"chat">; reason: string }): never;
         },
         "chatgpt"
       >()
@@ -53,11 +54,12 @@ export namespace MessageType {
       .application<
         {
           /**
-           * Function that pulls out the type that can be called the next time
+           * type property is Function that pulls out the type that can be called the next time.
+           * and, reason is the reason why he chose this type.
            *
            * @title call
            */
-          call(input: { type: Transition<"selectFunction"> }): never;
+          call(input: { type: Transition<"selectFunction">; reason: string }): never;
         },
         "chatgpt"
       >()
@@ -76,11 +78,12 @@ export namespace MessageType {
       .application<
         {
           /**
-           * Function that pulls out the type that can be called the next time
+           * type property is Function that pulls out the type that can be called the next time.
+           * and, reason is the reason why he chose this type.
            *
            * @title call
            */
-          call(input: { type: Transition<"fillArgument"> }): never;
+          call(input: { type: Transition<"fillArgument">; reason: string }): never;
         },
         "chatgpt"
       >()
@@ -99,11 +102,12 @@ export namespace MessageType {
       .application<
         {
           /**
-           * Function that pulls out the type that can be called the next time
+           * type property is Function that pulls out the type that can be called the next time.
+           * and, reason is the reason why he chose this type.
            *
            * @title call
            */
-          call(input: { type: Transition<"runFunction"> }): never;
+          call(input: { type: Transition<"runFunction">; reason: string }): never;
         },
         "chatgpt"
       >()
@@ -128,4 +132,9 @@ export interface MessageType {
    * @title type
    */
   type: "chat" | "selectFunction" | "fillArgument" | "runFunction";
+
+  /**
+   * @title reason is the reason why he chose this type.
+   */
+  reason: string;
 }
