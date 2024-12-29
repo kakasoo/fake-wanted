@@ -5,7 +5,7 @@ export namespace IWanted {
     user_recent_search_keyword: any;
     keywords: string[];
     company_tags: string[];
-    companies: Array<{
+    companies: null | Array<{
       id: number;
       logo_img: null | {
         origin: string & tags.Format<"uri">;
