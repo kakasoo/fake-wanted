@@ -51,8 +51,8 @@ export namespace RunFunctionAgent {
     }).chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        ...histories,
         ...(systemPrompt ? [] : [System.prompt()]), // Answer 용 시스템 프롬프트가 주입 안된 경우에 주입한다.
+        ...histories,
         {
           role: "user",
           content: [
