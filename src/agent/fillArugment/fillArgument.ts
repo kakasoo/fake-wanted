@@ -19,8 +19,9 @@ export namespace FillArgumentAgent {
       const types: IAgent.Role[] = ["fillArgument", "selectFunction", "opener"];
       const histories = Scribe.prompt(room, types);
 
-      if (histories.some((el) => !types.includes(el.system_role))) {
-        throw new Error("Invalid system_role_type injected!");
+      const invalidSystemPrompt = histories.find((el) => el.role === "system" && !types.includes(el.system_role));
+      if (invalidSystemPrompt) {
+        console.error(`invalidSystemPrompt: ${JSON.stringify(invalidSystemPrompt, null, 2)}`);
       }
 
       const systemPrompt = histories.find((el) => {
