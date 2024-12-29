@@ -3,7 +3,7 @@ import typia from "typia";
 
 export namespace MessageType {
   export interface Tool {
-    call(input: MessageType): never;
+    call(input: { type: "chat" | "selectFunction" | "fillArgument" | "runFunction" }): never;
   }
 
   export const functions = typia.llm.application<Tool, "chatgpt">().functions.map((func): ChatCompletionTool => {
