@@ -13,6 +13,7 @@ import { MessageType as FillArugmentMessageType } from "../fillArugment/IMessage
 import { FillArgumentAgent } from "../fillArugment/fillArgument";
 import { Scribe } from "../scribe/scribe";
 import { AgentUtil } from "../utils";
+import { MessageType } from "./IMessageType";
 import { System } from "./system";
 
 export namespace RunFunctionAgent {
@@ -60,6 +61,9 @@ export namespace RunFunctionAgent {
           ].join("\n"),
         },
       ],
+      tools: MessageType.functions,
+      tool_choice: "required",
+      parallel_tool_calls: false,
     });
 
     return AgentUtil.getContent("runFunction")(chatCompletion);

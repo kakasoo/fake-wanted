@@ -9,6 +9,7 @@ import { ChatProvider } from "../../providers/room/ChatProvider";
 import { RoomProvider } from "../../providers/room/RoomProvider";
 import { Scribe } from "../scribe/scribe";
 import { AgentUtil } from "../utils";
+import { MessageType } from "./IMessageType";
 import { System } from "./system";
 
 export namespace FillArgumentAgent {
@@ -52,6 +53,9 @@ export namespace FillArgumentAgent {
               ]
             : []),
         ],
+        tools: MessageType.functions,
+        tool_choice: "required",
+        parallel_tool_calls: false,
       });
 
       return AgentUtil.getContent("fillArgument")(chatCompletion);
