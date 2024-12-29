@@ -110,6 +110,12 @@ export namespace AgentUtil {
     }
 
     export function answer(input: ChatCompletion): AnswerMessageType {
+      const tool = input.choices[0].message.tool_calls?.at(0)?.function.arguments;
+      const validTool = typia.json.isParse<AnswerMessageType>(tool ?? "{}");
+      if (validTool !== null) {
+        return validTool;
+      }
+
       const content = input.choices.at(0)?.message.content ?? null;
       if (content === null) {
         throw new Error(`answer content is nothing.`);
