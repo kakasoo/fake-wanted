@@ -9,7 +9,13 @@ import { MessageType as SelectFunctionMessageType } from "../selectFunction/IMes
 
 export namespace AgentUtil {
   export namespace Content {
-    export function runFunction(input: ChatCompletion) {
+    export function runFunction(input: ChatCompletion): RunFunctionMessageType {
+      const tool = input.choices[0].message.tool_calls?.at(0)?.function.arguments;
+      const validTool = typia.json.isParse<RunFunctionMessageType>(tool ?? "{}");
+      if (validTool !== null) {
+        return validTool;
+      }
+
       const content = input.choices.at(0)?.message.content ?? null;
       if (content === null) {
         throw new Error(`runFunction content is nothing.`);
@@ -29,6 +35,12 @@ export namespace AgentUtil {
     }
 
     export function fillArgument(input: ChatCompletion): FillArgumentMessageType {
+      const tool = input.choices[0].message.tool_calls?.at(0)?.function.arguments;
+      const validTool = typia.json.isParse<FillArgumentMessageType>(tool ?? "{}");
+      if (validTool !== null) {
+        return validTool;
+      }
+
       const content = input.choices.at(0)?.message.content ?? null;
       if (content === null) {
         throw new Error(`fillArgument content is nothing.`);
@@ -48,6 +60,12 @@ export namespace AgentUtil {
     }
 
     export function selectFunction(input: ChatCompletion): SelectFunctionMessageType {
+      const tool = input.choices[0].message.tool_calls?.at(0)?.function.arguments;
+      const validTool = typia.json.isParse<SelectFunctionMessageType>(tool ?? "{}");
+      if (validTool !== null) {
+        return validTool;
+      }
+
       const content = input.choices.at(0)?.message.content ?? null;
       if (content === null) {
         throw new Error(`selectFunction content is nothing.`);
@@ -67,12 +85,18 @@ export namespace AgentUtil {
     }
 
     export function judgement(input: ChatCompletion): JudgementMessageType {
+      const tool = input.choices[0].message.tool_calls?.at(0)?.function.arguments;
+      const validTool = typia.json.isParse<JudgementMessageType>(tool ?? "{}");
+      if (validTool !== null) {
+        return validTool;
+      }
+
       const content = input.choices.at(0)?.message.content ?? null;
+      const response = content === null ? null : typia.json.isParse<JudgementMessageType>(content);
       if (content === null) {
         throw new Error(`judgement content is nothing.`);
       }
 
-      const response = content === null ? null : typia.json.isParse<JudgementMessageType>(content);
       if (response === null) {
         const parsed = { ...JSON.parse(content), type: "judgement" };
         if (typia.is<JudgementMessageType>(parsed)) {
