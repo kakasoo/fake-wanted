@@ -27,5 +27,4 @@ export interface MessageType {
     body?: object;
     param?: object;
   };
-  message: string;
 }
