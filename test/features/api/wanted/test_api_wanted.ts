@@ -45,3 +45,11 @@ export async function test_api_wanted_with_fill_argument_2() {
   const response = await RunFunctionAgent.functionCall(fillArgument);
   typia.assert(response);
 }
+
+export async function test_api_wanted_get_position(connection: api.IConnection): Promise<void> {
+  const res = await api.functional.wanted.positions.getPosition(connection, {
+    query: "Node.js",
+  });
+
+  typia.assert(res);
+}

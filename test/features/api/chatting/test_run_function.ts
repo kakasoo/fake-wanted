@@ -61,7 +61,7 @@ export async function test_api_chatting_run_function_chat(): Promise<void> {
       ),
       "</RESPONSE>",
     ].join("\n"),
-    role: "called",
+    role: "runFunction",
   });
 
   const room = await RoomProvider.at(user)({ id: roomId });
