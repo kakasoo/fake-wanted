@@ -16,6 +16,7 @@ export namespace System {
         "# Answer",
         "## Answer of SelectFunction",
         "If the previous assistance message type is 'selectFunction', the selected function should be explained. However, since the listener may not be a developer at this time, it should be explained easily, and the answer should be an answer that can meet the user's questions or requirements.",
+        "Rather than describing each factor of the function, it is better to tell the purpose of the function and the expected outcome.",
         "## Answer of FillArgument",
         "If the previous assistance message type is 'fillArgument', you should explain how to fill in the parameters. Explain as easily as possible so that the listener can understand it.",
         "## Answer of RunFunction",
