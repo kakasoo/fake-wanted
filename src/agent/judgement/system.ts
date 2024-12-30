@@ -24,6 +24,8 @@ export namespace System {
         'In this case, you should go to "chat", "fillArgument" or "runFunction".',
         "",
         "# FillArgument",
+        "It should be selected if the user's utterance can fill in the factor.",
+        "Even if the user says he wants to call the function, he may not have told you about the factor yet.",
         "'runFunction' should not be called before the argument is filled yet.",
         'If the argument is simple enough to go directly to "runFunction" before going to "fillArgument",',
         "fillArgument may be omitted, but if the function execution is a fatal API that may destroy the user's information",
