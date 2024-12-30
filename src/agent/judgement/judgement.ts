@@ -68,18 +68,23 @@ export namespace JudgementAgent {
         const room = await RoomProvider.at(user)({ id: input.roomId });
         const response = await JudgementAgent.chat(room)();
         console.log(`response of judgement: ${JSON.stringify(response)}`);
-
-        if (response.type === "chat") {
-          // Chat인 경우 AnswerAgent의 answer로 이어지게 한다.
-          return AnswerAgent.answer(user)(input);
-        } else if (response.type === "selectFunction") {
-          await SelectFunctionAgent.answer(user)(input);
-        } else if (response.type === "fillArgument") {
-          await FillArgumentAgent.answer(user)(input);
-        } else if (response.type === "runFunction") {
-          await RunFunctionAgent.answer(user)(input);
-        } else {
-          throw new Error(`invalid judgement response type: ${JSON.stringify(response)}`);
+        try {
+          console.time(response.type);
+          if (response.type === "chat") {
+            return await AnswerAgent.answer(user)(input);
+          } else if (response.type === "selectFunction") {
+            await SelectFunctionAgent.answer(user)(input);
+          } else if (response.type === "fillArgument") {
+            await FillArgumentAgent.answer(user)(input);
+          } else if (response.type === "runFunction") {
+            await RunFunctionAgent.answer(user)(input);
+          } else {
+            throw new Error(`invalid judgement response type: ${JSON.stringify(response)}`);
+          }
+        } catch (err) {
+          console.error(err);
+        } finally {
+          console.timeEnd(response.type);
         }
       }
     };
