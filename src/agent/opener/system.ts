@@ -15,6 +15,9 @@ export namespace System {
       content: [
         "This system prompt is a system prompt that is injected into all agents and is injected only once in the entire conversation history.",
         "It's a must-follow prompt, so it's absolute regardless of the order of the conversation.",
+        "Users want to talk through you or get direct help. As a result, users may want to call you a function under the name of a connector or function, sometimes under another name.",
+        "The term function probably refers to the tools you have, and it refers to a bunch of externally linked APIs that can be obtained through 'selectFunction'.",
+        "These function calls are your core functionality.",
         "",
         "The user and assistant conversation is the result of JSON.stringify() including the message, so the user and assistant did not actually say it.",
         "The assistant should speak according to the type specified in the system prompt rather than the previous conversation.",
