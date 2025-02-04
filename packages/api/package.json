@@ -16,8 +16,8 @@
   },
   "homepage": "https://github.com/kakasoo/fake-wanted#readme",
   "dependencies": {
-    "@nestia/fetcher": "^4.4.2",
-    "typia": "^7.4.1"
+    "@nestia/fetcher": "^4.6.1",
+    "typia": "^7.6.1"
   },
   "include": [
     "lib",
